@@ -1,0 +1,3520 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Open and extensible continuous delivery solution for Kubernetes">
+      
+      
+      
+        <meta name="author" content="The Flux project">
+      
+      
+        <link rel="canonical" href="https://toolkit.fluxcd.io/components/kustomize/kustomization/">
+      
+      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.8">
+    
+    
+      
+        <title>Kustomization CRD - Flux | GitOps Toolkit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.cb6bc1d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.39b8e14a.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#2094f3">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../_static/custom.css">
+    
+    
+      
+    
+    
+
+<meta property="og:url" content="https://toolkit.fluxcd.io/components/kustomize/kustomization/">
+
+<meta property="og:title" content="Kustomization CRD - Flux | GitOps Toolkit">
+
+<meta property="og:description" content="Open and extensible continuous delivery solution for Kubernetes">
+<meta property="og:image" content="https://toolkit.fluxcd.io/_files/toolkit-icon.png">
+<meta property="og:image:alt" content="GitOps Toolkit">
+<meta property="og:image:type" content="image/png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@stefanprodan">
+<meta name="twitter:creator" content="@stefanprodan">
+
+<meta property="twitter:title" content="Kustomization CRD - Flux | GitOps Toolkit">
+
+<meta name="twitter:description" content="Open and extensible continuous delivery solution for Kubernetes">
+<meta name="twitter:image" content="https://toolkit.fluxcd.io/_files/toolkit-icon.png">
+<meta name="twitter:image:alt" content="GitOps Toolkit">
+
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue" data-md-color-accent="indigo">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kustomization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://toolkit.fluxcd.io" title="Flux | GitOps Toolkit" class="md-header-nav__button md-logo" aria-label="Flux | GitOps Toolkit">
+      
+  <img src="../../../_files/flux-icon@2x.png" alt="logo">
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            Flux | GitOps Toolkit
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              Kustomization CRD
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/fluxcd/flux2" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fluxcd/flux2
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://toolkit.fluxcd.io" title="Flux | GitOps Toolkit" class="md-nav__button md-logo" aria-label="Flux | GitOps Toolkit">
+      
+  <img src="../../../_files/flux-icon@2x.png" alt="logo">
+
+    </a>
+    Flux | GitOps Toolkit
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/fluxcd/flux2" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fluxcd/flux2
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../core-concepts/" class="md-nav__link">
+        Core Concepts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/" class="md-nav__link">
+        Get Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
+      
+      <label class="md-nav__link" for="nav-4">
+        Migration
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Migration" data-md-level="1">
+        <label class="md-nav__title" for="nav-4">
+          <span class="md-nav__icon md-icon"></span>
+          Migration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/flux-v1-migration/" class="md-nav__link">
+        Migrate from Flux v1
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/flux-v1-automation-migration/" class="md-nav__link">
+        Migrate from Flux v1 image update automation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/helm-operator-migration/" class="md-nav__link">
+        Migrate from the Helm Operator
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+      
+      <label class="md-nav__link" for="nav-5">
+        Guides
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/helmreleases/" class="md-nav__link">
+        Manage Helm Releases
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/notifications/" class="md-nav__link">
+        Setup Notifications
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/webhook-receivers/" class="md-nav__link">
+        Setup Webhook Receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/monitoring/" class="md-nav__link">
+        Monitoring with Prometheus
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/sealed-secrets/" class="md-nav__link">
+        Sealed Secrets
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/mozilla-sops/" class="md-nav__link">
+        Mozilla SOPS
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/image-update/" class="md-nav__link">
+        Automate image updates to Git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/sortable-image-tags/" class="md-nav__link">
+        Sortable image tags to use with automation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6" checked>
+      
+      <label class="md-nav__link" for="nav-6">
+        Toolkit Components
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Toolkit Components" data-md-level="1">
+        <label class="md-nav__title" for="nav-6">
+          <span class="md-nav__icon md-icon"></span>
+          Toolkit Components
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-2" type="checkbox" id="nav-6-2" >
+      
+      <label class="md-nav__link" for="nav-6-2">
+        Source Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Source Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-2">
+          <span class="md-nav__icon md-icon"></span>
+          Source Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../source/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../source/gitrepositories/" class="md-nav__link">
+        GitRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../source/helmrepositories/" class="md-nav__link">
+        HelmRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../source/helmcharts/" class="md-nav__link">
+        HelmChart CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../source/buckets/" class="md-nav__link">
+        Bucket CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../source/api/" class="md-nav__link">
+        Source API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-3" type="checkbox" id="nav-6-3" checked>
+      
+      <label class="md-nav__link" for="nav-6-3">
+        Kustomize Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Kustomize Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-3">
+          <span class="md-nav__icon md-icon"></span>
+          Kustomize Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Kustomization CRD
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Kustomization CRD
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#specification" class="md-nav__link">
+    Specification
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-reference" class="md-nav__link">
+    Source reference
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-kustomizationyaml" class="md-nav__link">
+    Generate kustomization.yaml
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reconciliation" class="md-nav__link">
+    Reconciliation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#garbage-collection" class="md-nav__link">
+    Garbage collection
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-assessment" class="md-nav__link">
+    Health assessment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kustomization-dependencies" class="md-nav__link">
+    Kustomization dependencies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role-based-access-control" class="md-nav__link">
+    Role-based access control
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#override-kustomize-config" class="md-nav__link">
+    Override kustomize config
+  </a>
+  
+    <nav class="md-nav" aria-label="Override kustomize config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target-namespace" class="md-nav__link">
+    Target namespace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategic-merge-patches" class="md-nav__link">
+    Strategic Merge patches
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#json-6902-patches" class="md-nav__link">
+    JSON 6902 patches
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#images" class="md-nav__link">
+    Images
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variable-substitution" class="md-nav__link">
+    Variable substitution
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remote-clusters-cluster-api" class="md-nav__link">
+    Remote Clusters / Cluster-API
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets-decryption" class="md-nav__link">
+    Secrets decryption
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    Status
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        Kustomize API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-4" type="checkbox" id="nav-6-4" >
+      
+      <label class="md-nav__link" for="nav-6-4">
+        Helm Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Helm Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-4">
+          <span class="md-nav__icon md-icon"></span>
+          Helm Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../helm/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../helm/helmreleases/" class="md-nav__link">
+        HelmRelease CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../helm/api/" class="md-nav__link">
+        Helm API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-5" type="checkbox" id="nav-6-5" >
+      
+      <label class="md-nav__link" for="nav-6-5">
+        Notification Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Notification Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-5">
+          <span class="md-nav__icon md-icon"></span>
+          Notification Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notification/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notification/event/" class="md-nav__link">
+        Event
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notification/provider/" class="md-nav__link">
+        Provider CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notification/alert/" class="md-nav__link">
+        Alert CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notification/receiver/" class="md-nav__link">
+        Receiver CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notification/api/" class="md-nav__link">
+        Notification API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-6" type="checkbox" id="nav-6-6" >
+      
+      <label class="md-nav__link" for="nav-6-6">
+        Image Automation Controllers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Image Automation Controllers" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-6">
+          <span class="md-nav__icon md-icon"></span>
+          Image Automation Controllers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../image/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../image/imagerepositories/" class="md-nav__link">
+        ImageRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../image/imagepolicies/" class="md-nav__link">
+        ImagePolicy CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../image/imageupdateautomations/" class="md-nav__link">
+        ImageUpdateAutomation CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../image/automation-api/" class="md-nav__link">
+        Automation API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" >
+      
+      <label class="md-nav__link" for="nav-7">
+        Flux CLI
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Flux CLI" data-md-level="1">
+        <label class="md-nav__title" for="nav-7">
+          <span class="md-nav__icon md-icon"></span>
+          Flux CLI
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_bootstrap/" class="md-nav__link">
+        Bootstrap
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_bootstrap_github/" class="md-nav__link">
+        Bootstrap github
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_bootstrap_gitlab/" class="md-nav__link">
+        Bootstrap gitlab
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_check/" class="md-nav__link">
+        Check
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create/" class="md-nav__link">
+        Create
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_kustomization/" class="md-nav__link">
+        Create kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_helmrelease/" class="md-nav__link">
+        Create helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_source/" class="md-nav__link">
+        Create source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_source_git/" class="md-nav__link">
+        Create source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_source_helm/" class="md-nav__link">
+        Create source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_source_bucket/" class="md-nav__link">
+        Create source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_alert-provider/" class="md-nav__link">
+        Create alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_alert/" class="md-nav__link">
+        Create alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_receiver/" class="md-nav__link">
+        Create receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_image/" class="md-nav__link">
+        Create image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_image_policy/" class="md-nav__link">
+        Create image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_image_repository/" class="md-nav__link">
+        Create image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_image_update/" class="md-nav__link">
+        Create image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_tenant/" class="md-nav__link">
+        Create tenant
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_secret/" class="md-nav__link">
+        Create secret
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_secret_git/" class="md-nav__link">
+        Create secret git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_secret_helm/" class="md-nav__link">
+        Create secret helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_create_secret_tls/" class="md-nav__link">
+        Create secret tls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete/" class="md-nav__link">
+        Delete
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_kustomization/" class="md-nav__link">
+        Delete kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_helmrelease/" class="md-nav__link">
+        Delete helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_source/" class="md-nav__link">
+        Delete source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_source_git/" class="md-nav__link">
+        Delete source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_source_helm/" class="md-nav__link">
+        Delete source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_source_bucket/" class="md-nav__link">
+        Delete source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_image/" class="md-nav__link">
+        Delete image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_image_policy/" class="md-nav__link">
+        Delete image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_image_repository/" class="md-nav__link">
+        Delete image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_delete_image_update/" class="md-nav__link">
+        Delete image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export/" class="md-nav__link">
+        Export
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_kustomization/" class="md-nav__link">
+        Export kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_helmrelease/" class="md-nav__link">
+        Export helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_source/" class="md-nav__link">
+        Export source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_source_git/" class="md-nav__link">
+        Export source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_source_helm/" class="md-nav__link">
+        Export source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_source_bucket/" class="md-nav__link">
+        Export source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_alert-provider/" class="md-nav__link">
+        Export alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_alert/" class="md-nav__link">
+        Export alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_receiver/" class="md-nav__link">
+        Export receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_image/" class="md-nav__link">
+        Export image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_image_policy/" class="md-nav__link">
+        Export image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_image_repository/" class="md-nav__link">
+        Export image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_export_image_update/" class="md-nav__link">
+        Export image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get/" class="md-nav__link">
+        Get
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_kustomizations/" class="md-nav__link">
+        Get kustomizations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_helmreleases/" class="md-nav__link">
+        Get helmreleases
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_sources/" class="md-nav__link">
+        Get sources
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_sources_git/" class="md-nav__link">
+        Get sources git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_sources_helm/" class="md-nav__link">
+        Get sources helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_sources_chart/" class="md-nav__link">
+        Get sources chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_sources_bucket/" class="md-nav__link">
+        Get sources bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_alert-provider.md" class="md-nav__link">
+        Get alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_alerts/" class="md-nav__link">
+        Get alerts
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_alert-providers/" class="md-nav__link">
+        Get alert providers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_receivers/" class="md-nav__link">
+        Get receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_images/" class="md-nav__link">
+        Get images
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_images_policy/" class="md-nav__link">
+        Get images policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_images_repository/" class="md-nav__link">
+        Get images repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_get_images_update/" class="md-nav__link">
+        Get images update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_install/" class="md-nav__link">
+        Install
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume/" class="md-nav__link">
+        Resume
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_kustomization/" class="md-nav__link">
+        Resume kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_helmrelease/" class="md-nav__link">
+        Resume helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_source/" class="md-nav__link">
+        Resume source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_source_git/" class="md-nav__link">
+        Resume source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_source_helm/" class="md-nav__link">
+        Resume source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_source_chart/" class="md-nav__link">
+        Resume source chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_source_bucket/" class="md-nav__link">
+        Resume source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_alert-provider.md" class="md-nav__link">
+        Resume alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_alert/" class="md-nav__link">
+        Resume alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_receiver/" class="md-nav__link">
+        Resume receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_image/" class="md-nav__link">
+        Resume image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_image_repository/" class="md-nav__link">
+        Resume image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_resume_image_update/" class="md-nav__link">
+        Resume image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend/" class="md-nav__link">
+        Suspend
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_kustomization/" class="md-nav__link">
+        Suspend kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_helmrelease/" class="md-nav__link">
+        Suspend helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_source/" class="md-nav__link">
+        Suspend source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_source_git/" class="md-nav__link">
+        Suspend source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_source_helm/" class="md-nav__link">
+        Suspend source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_source_chart/" class="md-nav__link">
+        Suspend source chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_source_bucket/" class="md-nav__link">
+        Suspend source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_alert-provider.md" class="md-nav__link">
+        Suspend alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_alert/" class="md-nav__link">
+        Suspend alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_receiver/" class="md-nav__link">
+        Suspend receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_image/" class="md-nav__link">
+        Suspend image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_image_repository/" class="md-nav__link">
+        Suspend image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_suspend_image_update/" class="md-nav__link">
+        Suspend image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile/" class="md-nav__link">
+        Reconcile
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_kustomization/" class="md-nav__link">
+        Reconcile kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_helmrelease/" class="md-nav__link">
+        Reconcile helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_source/" class="md-nav__link">
+        Reconcile source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_source_git/" class="md-nav__link">
+        Reconcile source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_source_helm/" class="md-nav__link">
+        Reconcile source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_source_bucket/" class="md-nav__link">
+        Reconcile source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_image/" class="md-nav__link">
+        Reconcile image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_image_repository/" class="md-nav__link">
+        Reconcile image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_reconcile_image_update/" class="md-nav__link">
+        Reconcile image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cmd/flux_uninstall/" class="md-nav__link">
+        Uninstall
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" >
+      
+      <label class="md-nav__link" for="nav-8">
+        Dev Guides
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Dev Guides" data-md-level="1">
+        <label class="md-nav__title" for="nav-8">
+          <span class="md-nav__icon md-icon"></span>
+          Dev Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dev-guides/source-watcher/" class="md-nav__link">
+        Watching for source changes
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dev-guides/debugging/" class="md-nav__link">
+        Advanced debugging
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../roadmap/" class="md-nav__link">
+        Roadmap
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#specification" class="md-nav__link">
+    Specification
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-reference" class="md-nav__link">
+    Source reference
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-kustomizationyaml" class="md-nav__link">
+    Generate kustomization.yaml
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reconciliation" class="md-nav__link">
+    Reconciliation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#garbage-collection" class="md-nav__link">
+    Garbage collection
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-assessment" class="md-nav__link">
+    Health assessment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kustomization-dependencies" class="md-nav__link">
+    Kustomization dependencies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role-based-access-control" class="md-nav__link">
+    Role-based access control
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#override-kustomize-config" class="md-nav__link">
+    Override kustomize config
+  </a>
+  
+    <nav class="md-nav" aria-label="Override kustomize config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target-namespace" class="md-nav__link">
+    Target namespace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategic-merge-patches" class="md-nav__link">
+    Strategic Merge patches
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#json-6902-patches" class="md-nav__link">
+    JSON 6902 patches
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#images" class="md-nav__link">
+    Images
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variable-substitution" class="md-nav__link">
+    Variable substitution
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remote-clusters-cluster-api" class="md-nav__link">
+    Remote Clusters / Cluster-API
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets-decryption" class="md-nav__link">
+    Secrets decryption
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    Status
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="kustomization">Kustomization<a class="headerlink" href="#kustomization" title="Permanent link">&para;</a></h1>
+<p>The <code>Kustomization</code> API defines a pipeline for fetching, decrypting, building, validating and applying Kubernetes manifests.</p>
+<h2 id="specification">Specification<a class="headerlink" href="#specification" title="Permanent link">&para;</a></h2>
+<p>A <strong>Kustomization</strong> object defines the source of Kubernetes manifests by referencing an object
+managed by <a href="https://github.com/fluxcd/source-controller">source-controller</a>,
+the path to the Kustomization file within that source,
+and the interval at which the kustomize build output is applied on the cluster.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">KustomizationSpec</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// DependsOn may contain a dependency.CrossNamespaceDependencyReference slice</span>
+    <span class="c1">// with references to Kustomization resources that must be ready before this</span>
+    <span class="c1">// Kustomization can be reconciled.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">DependsOn</span> <span class="p">[]</span><span class="nx">dependency</span><span class="p">.</span><span class="nx">CrossNamespaceDependencyReference</span> <span class="s">`json:&quot;dependsOn,omitempty&quot;`</span>
+
+    <span class="c1">// Decrypt Kubernetes secrets before applying them on the cluster.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Decryption</span> <span class="o">*</span><span class="nx">Decryption</span> <span class="s">`json:&quot;decryption,omitempty&quot;`</span>
+
+    <span class="c1">// The interval at which to reconcile the Kustomization.</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Interval</span> <span class="nx">metav1</span><span class="p">.</span><span class="nx">Duration</span> <span class="s">`json:&quot;interval&quot;`</span>
+
+    <span class="c1">// The interval at which to retry a previously failed reconciliation.</span>
+    <span class="c1">// When not specified, the controller uses the KustomizationSpec.Interval</span>
+    <span class="c1">// value to retry failures.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">RetryInterval</span> <span class="o">*</span><span class="nx">metav1</span><span class="p">.</span><span class="nx">Duration</span> <span class="s">`json:&quot;retryInterval,omitempty&quot;`</span>
+
+    <span class="c1">// The KubeConfig for reconciling the Kustomization on a remote cluster.</span>
+    <span class="c1">// When specified, KubeConfig takes precedence over ServiceAccountName.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">KubeConfig</span> <span class="o">*</span><span class="nx">KubeConfig</span> <span class="s">`json:&quot;kubeConfig,omitempty&quot;`</span>
+
+    <span class="c1">// Path to the directory containing the kustomization.yaml file, or the</span>
+    <span class="c1">// set of plain YAMLs a kustomization.yaml should be generated for.</span>
+    <span class="c1">// Defaults to &#39;None&#39;, which translates to the root path of the SourceRef.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Path</span> <span class="kt">string</span> <span class="s">`json:&quot;path,omitempty&quot;`</span>
+
+    <span class="c1">// PostBuild describes which actions to perform on the YAML manifest</span>
+    <span class="c1">// generated by building the kustomize overlay.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">PostBuild</span> <span class="o">*</span><span class="nx">PostBuild</span> <span class="s">`json:&quot;postBuild,omitempty&quot;`</span>
+
+    <span class="c1">// Enables garbage collection.</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Prune</span> <span class="kt">bool</span> <span class="s">`json:&quot;prune&quot;`</span>
+
+    <span class="c1">// A list of resources to be included in the health assessment.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">HealthChecks</span> <span class="p">[]</span><span class="nx">meta</span><span class="p">.</span><span class="nx">NamespacedObjectKindReference</span> <span class="s">`json:&quot;healthChecks,omitempty&quot;`</span>
+
+    <span class="c1">// Strategic merge patches, defined as inline YAML objects.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">PatchesStrategicMerge</span> <span class="p">[]</span><span class="nx">apiextensionsv1</span><span class="p">.</span><span class="nx">JSON</span> <span class="s">`json:&quot;patchesStrategicMerge,omitempty&quot;`</span>
+
+    <span class="c1">// JSON 6902 patches, defined as inline YAML objects.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">PatchesJSON6902</span> <span class="p">[]</span><span class="nx">kustomize</span><span class="p">.</span><span class="nx">JSON6902Patch</span> <span class="s">`json:&quot;patchesJson6902,omitempty&quot;`</span>
+
+    <span class="c1">// Images is a list of (image name, new name, new tag or digest)</span>
+    <span class="c1">// for changing image names, tags or digests. This can also be achieved with a</span>
+    <span class="c1">// patch, but this operator is simpler to specify.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Images</span> <span class="p">[]</span><span class="nx">kustomize</span><span class="p">.</span><span class="nx">Image</span> <span class="s">`json:&quot;images,omitempty&quot;`</span>
+
+    <span class="c1">// The name of the Kubernetes service account to impersonate</span>
+    <span class="c1">// when reconciling this Kustomization.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">ServiceAccountName</span> <span class="kt">string</span> <span class="s">`json:&quot;serviceAccountName,omitempty&quot;`</span>
+
+    <span class="c1">// Reference of the source where the kustomization file is.</span>
+    <span class="c1">// +required</span>
+    <span class="nx">SourceRef</span> <span class="nx">CrossNamespaceSourceReference</span> <span class="s">`json:&quot;sourceRef&quot;`</span>
+
+    <span class="c1">// This flag tells the controller to suspend subsequent kustomize executions,</span>
+    <span class="c1">// it does not apply to already started executions. Defaults to false.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Suspend</span> <span class="kt">bool</span> <span class="s">`json:&quot;suspend,omitempty&quot;`</span>
+
+    <span class="c1">// TargetNamespace sets or overrides the namespace in the</span>
+    <span class="c1">// kustomization.yaml file.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">TargetNamespace</span> <span class="kt">string</span> <span class="s">`json:&quot;targetNamespace,omitempty&quot;`</span>
+
+    <span class="c1">// Timeout for validation, apply and health checking operations.</span>
+    <span class="c1">// Defaults to &#39;Interval&#39; duration.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Timeout</span> <span class="o">*</span><span class="nx">metav1</span><span class="p">.</span><span class="nx">Duration</span> <span class="s">`json:&quot;timeout,omitempty&quot;`</span>
+
+    <span class="c1">// Validate the Kubernetes objects before applying them on the cluster.</span>
+    <span class="c1">// The validation strategy can be &#39;client&#39; (local dry-run), &#39;server&#39; (APIServer dry-run) or &#39;none&#39;.</span>
+    <span class="c1">// +kubebuilder:validation:Enum=none;client;server</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Validation</span> <span class="kt">string</span> <span class="s">`json:&quot;validation,omitempty&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The decryption section defines how decryption is handled for Kubernetes manifests:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">Decryption</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// Provider is the name of the decryption engine.</span>
+    <span class="c1">// +kubebuilder:validation:Enum=sops</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Provider</span> <span class="kt">string</span> <span class="s">`json:&quot;provider&quot;`</span>
+
+    <span class="c1">// The secret name containing the private OpenPGP keys used for decryption.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">SecretRef</span> <span class="o">*</span><span class="nx">meta</span><span class="p">.</span><span class="nx">LocalObjectReference</span> <span class="s">`json:&quot;secretRef,omitempty&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>KubeConfig references a Kubernetes Secret for applying to another cluster.
+This can be used with Cluster API:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">KubeConfig</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// SecretRef holds the name to a secret that contains a &#39;value&#39; key with</span>
+    <span class="c1">// the kubeconfig file as the value. It must be in the same namespace as</span>
+    <span class="c1">// the Kustomization.</span>
+    <span class="c1">// It is recommended that the kubeconfig is self-contained, and the secret</span>
+    <span class="c1">// is regularly updated if credentials such as a cloud-access-token expire.</span>
+    <span class="c1">// Cloud specific `cmd-path` auth helpers will not function without adding</span>
+    <span class="c1">// binaries and credentials to the Pod that is responsible for reconciling</span>
+    <span class="c1">// the Kustomization.</span>
+    <span class="c1">// +required</span>
+    <span class="nx">SecretRef</span> <span class="nx">meta</span><span class="p">.</span><span class="nx">LocalObjectReference</span> <span class="s">`json:&quot;secretRef,omitempty&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Image contains the name, new name and new tag that will replace the original container image:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">Image</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// Name of the image to be replaced.</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&quot;name&quot;`</span>
+
+    <span class="c1">// NewName is the name of the image used to replace the original one.</span>
+    <span class="c1">// +required</span>
+    <span class="nx">NewName</span> <span class="kt">string</span> <span class="s">`json:&quot;newName&quot;`</span>
+
+    <span class="c1">// NewTag is the image tag used to replace the original tag.</span>
+    <span class="c1">// +required</span>
+    <span class="nx">NewTag</span> <span class="kt">string</span> <span class="s">`json:&quot;newTag&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The post-build section defines which actions to perform on the YAML manifest after kustomize build:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">PostBuild</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// Substitute holds a map of key/value pairs.</span>
+    <span class="c1">// The variables defined in your YAML manifests</span>
+    <span class="c1">// that match any of the keys defined in the map</span>
+    <span class="c1">// will be substituted with the set value.</span>
+    <span class="c1">// Includes support for bash string replacement functions</span>
+    <span class="c1">// e.g. ${var:=default}, ${var:position} and ${var/substring/replacement}.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Substitute</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span> <span class="s">`json:&quot;substitute,omitempty&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The status sub-resource records the result of the last reconciliation:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">KustomizationStatus</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// ObservedGeneration is the last reconciled generation.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">ObservedGeneration</span> <span class="kt">int64</span> <span class="s">`json:&quot;observedGeneration,omitempty&quot;`</span>
+
+    <span class="c1">// +optional</span>
+    <span class="nx">Conditions</span> <span class="p">[]</span><span class="nx">metav1</span><span class="p">.</span><span class="nx">Condition</span> <span class="s">`json:&quot;conditions,omitempty&quot;`</span>
+
+    <span class="c1">// The last successfully applied revision.</span>
+    <span class="c1">// The revision format for Git sources is &lt;branch|tag&gt;/&lt;commit-sha&gt;.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">LastAppliedRevision</span> <span class="kt">string</span> <span class="s">`json:&quot;lastAppliedRevision,omitempty&quot;`</span>
+
+    <span class="c1">// LastAttemptedRevision is the revision of the last reconciliation attempt.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">LastAttemptedRevision</span> <span class="kt">string</span> <span class="s">`json:&quot;lastAttemptedRevision,omitempty&quot;`</span>
+
+    <span class="c1">// LastHandledReconcileAt is the last manual reconciliation request (by</span>
+    <span class="c1">// annotating the Kustomization) handled by the reconciler.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">LastHandledReconcileAt</span> <span class="kt">string</span> <span class="s">`json:&quot;lastHandledReconcileAt,omitempty&quot;`</span>
+
+    <span class="c1">// The last successfully applied revision metadata.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Snapshot</span> <span class="o">*</span><span class="nx">Snapshot</span> <span class="s">`json:&quot;snapshot&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Status condition types:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="p">(</span>
+    <span class="c1">// ReadyCondition is the name of the condition that</span>
+    <span class="c1">// records the readiness status of a Kustomization.</span>
+    <span class="nx">ReadyCondition</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;Ready&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Status condition reasons:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="p">(</span>
+    <span class="c1">// ReconciliationSucceededReason represents the fact that the</span>
+    <span class="c1">// reconciliation of the Kustomization has succeeded.</span>
+    <span class="nx">ReconciliationSucceededReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;ReconciliationSucceeded&quot;</span>
+
+    <span class="c1">// ReconciliationFailedReason represents the fact that the</span>
+    <span class="c1">// reconciliation of the Kustomization has failed.</span>
+    <span class="nx">ReconciliationFailedReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;ReconciliationFailed&quot;</span>
+
+    <span class="c1">// ProgressingReason represents the fact that the</span>
+    <span class="c1">// reconciliation of the Kustomization is underway.</span>
+    <span class="nx">ProgressingReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;Progressing&quot;</span>
+
+    <span class="c1">// DependencyNotReady represents the fact that</span>
+    <span class="c1">// one of the dependencies of the Kustomization is not ready.</span>
+    <span class="nx">DependencyNotReadyReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;DependencyNotReady&quot;</span>
+
+    <span class="c1">// PruneFailedReason represents the fact that the</span>
+    <span class="c1">// pruning of the Kustomization failed.</span>
+    <span class="nx">PruneFailedReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;PruneFailed&quot;</span>
+
+    <span class="c1">// ArtifactFailedReason represents the fact that the</span>
+    <span class="c1">// artifact download of the kustomization failed.</span>
+    <span class="nx">ArtifactFailedReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;ArtifactFailed&quot;</span>
+
+    <span class="c1">// BuildFailedReason represents the fact that the</span>
+    <span class="c1">// kustomize build of the Kustomization failed.</span>
+    <span class="nx">BuildFailedReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;BuildFailed&quot;</span>
+
+    <span class="c1">// HealthCheckFailedReason represents the fact that</span>
+    <span class="c1">// one of the health checks of the Kustomization failed.</span>
+    <span class="nx">HealthCheckFailedReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;HealthCheckFailed&quot;</span>
+
+    <span class="c1">// ValidationFailedReason represents the fact that the</span>
+    <span class="c1">// validation of the Kustomization manifests has failed.</span>
+    <span class="nx">ValidationFailedReason</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;ValidationFailed&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="source-reference">Source reference<a class="headerlink" href="#source-reference" title="Permanent link">&para;</a></h2>
+<p>The Kustomization <code>spec.sourceRef</code> is a reference to an object managed by
+<a href="https://github.com/fluxcd/source-controller">source-controller</a>. When the source
+<a href="https://github.com/fluxcd/source-controller/blob/master/docs/spec/v1beta1/common.md#source-status">revision</a>
+changes, it generates a Kubernetes event that triggers a kustomize build and apply.</p>
+<p>Source supported types:</p>
+<ul>
+<li><a href="https://github.com/fluxcd/source-controller/blob/master/docs/spec/v1beta1/gitrepositories.md">GitRepository</a></li>
+<li><a href="https://github.com/fluxcd/source-controller/blob/master/docs/spec/v1beta1/buckets.md">Bucket</a></li>
+</ul>
+<blockquote>
+<p><strong>Note</strong> that the source should contain the kustomization.yaml and all the
+Kubernetes manifests and configuration files referenced in the kustomization.yaml.
+If your Git repository or S3 bucket contains only plain manifests,
+then a kustomization.yaml will be automatically generated.</p>
+</blockquote>
+<h2 id="generate-kustomizationyaml">Generate kustomization.yaml<a class="headerlink" href="#generate-kustomizationyaml" title="Permanent link">&para;</a></h2>
+<p>If your repository contains plain Kubernetes manifests, the <code>kustomization.yaml</code>
+file is automatically generated for all the Kubernetes manifests
+in the <code>spec.path</code> and sub-directories. This expects all YAML files present under that path to be valid kubernetes manifests
+and needs non-kubernetes ones to be excluded using <code>.sourceignore</code> file or <code>spec.ignore</code> on <code>GitRepository</code> object.</p>
+<p>Example of excluding CI workflows and SOPS config files:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/stefanprodan/podinfo</span>
+  <span class="nt">ignore</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+    <span class="no">.git/</span>
+    <span class="no">.github/</span>
+    <span class="no">.sops.yaml</span>
+    <span class="no">.gitlab-ci.yml</span>
+</code></pre></div>
+<p>It is recommended to generate the <code>kustomization.yaml</code> on your own and store it in Git, this way you can
+validate your manifests in CI (example script <a href="https://github.com/fluxcd/flux2-multi-tenancy/blob/main/scripts/validate.sh">here</a>).
+Assuming your manifests are inside <code>./clusters/my-cluster</code>, you can generate a <code>kustomization.yaml</code> with:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> clusters/my-cluster
+
+<span class="c1"># create kustomization</span>
+kustomize create --autodetect --recursive
+
+<span class="c1"># validate kustomization</span>
+kustomize build <span class="p">|</span> kubeval --ignore-missing-schemas
+</code></pre></div>
+<h2 id="reconciliation">Reconciliation<a class="headerlink" href="#reconciliation" title="Permanent link">&para;</a></h2>
+<p>The Kustomization <code>spec.interval</code> tells the controller at which interval to fetch the
+Kubernetes manifest for the source, build the Kustomization and apply it on the cluster.
+The interval time units are <code>s</code>, <code>m</code> and <code>h</code> e.g. <code>interval: 5m</code>, the minimum value should be over 60 seconds.</p>
+<p>The Kustomization execution can be suspended by setting <code>spec.suspend</code> to <code>true</code>.</p>
+<p>The controller can be told to reconcile the Kustomization outside of the specified interval
+by annotating the Kustomization object with:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="p">(</span>
+    <span class="c1">// ReconcileAtAnnotation is the annotation used for triggering a</span>
+    <span class="c1">// reconciliation outside of the defined schedule.</span>
+    <span class="nx">ReconcileAtAnnotation</span> <span class="kt">string</span> <span class="p">=</span> <span class="s">&quot;reconcile.fluxcd.io/requestedAt&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>On-demand execution example:</p>
+<div class="highlight"><pre><span></span><code>kubectl annotate --overwrite kustomization/podinfo reconcile.fluxcd.io/requestedAt<span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>date +%s<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>List all Kubernetes objects reconciled from a Kustomization:</p>
+<div class="highlight"><pre><span></span><code>kubectl get all --all-namespaces <span class="se">\</span>
+-l<span class="o">=</span>kustomize.toolkit.fluxcd.io/name<span class="o">=</span><span class="s2">&quot;&lt;Kustomization name&gt;&quot;</span> <span class="se">\</span>
+-l<span class="o">=</span>kustomize.toolkit.fluxcd.io/namespace<span class="o">=</span><span class="s2">&quot;&lt;Kustomization namespace&gt;&quot;</span>
+</code></pre></div>
+<h2 id="garbage-collection">Garbage collection<a class="headerlink" href="#garbage-collection" title="Permanent link">&para;</a></h2>
+<p>To enable garbage collection, set <code>spec.prune</code> to <code>true</code>.</p>
+<p>Garbage collection means that the Kubernetes objects that were previously applied on the cluster
+but are missing from the current source revision, are removed from cluster automatically.
+Garbage collection is also performed when a Kustomization object is deleted,
+triggering a removal of all Kubernetes objects previously applied on the cluster.</p>
+<p>To keep track of the Kubernetes objects reconciled from a Kustomization, the following labels 
+are injected into the manifests:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">labels</span><span class="p">:</span>
+  <span class="nt">kustomize.toolkit.fluxcd.io/name</span><span class="p">:</span> <span class="s">&quot;&lt;Kustomization</span><span class="nv"> </span><span class="s">name&gt;&quot;</span>
+  <span class="nt">kustomize.toolkit.fluxcd.io/namespace</span><span class="p">:</span> <span class="s">&quot;&lt;Kustomization</span><span class="nv"> </span><span class="s">namespace&gt;&quot;</span>
+  <span class="nt">kustomize.toolkit.fluxcd.io/checksum</span><span class="p">:</span> <span class="s">&quot;&lt;manifests</span><span class="nv"> </span><span class="s">checksum&gt;&quot;</span>
+</code></pre></div>
+<p>The checksum label value is updated if the content of <code>spec.path</code> changes.
+When pruning is disabled, the checksum label is omitted. </p>
+<p>You can disable pruning for certain resources by either
+labeling or annotating them with:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">kustomize.toolkit.fluxcd.io/prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disabled</span>
+</code></pre></div>
+<h2 id="health-assessment">Health assessment<a class="headerlink" href="#health-assessment" title="Permanent link">&para;</a></h2>
+<p>A Kustomization can contain a series of health checks used to determine the
+<a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#deployment-status">rollout status</a>
+of the deployed workloads and the ready status of custom resources.</p>
+<p>A health check entry can reference one of the following types:</p>
+<ul>
+<li>Kubernetes builtin kinds: Deployment, DaemonSet, StatefulSet, PersistentVolumeClaim, Pod, PodDisruptionBudget, Job, CronJob, Service, Secret, ConfigMap, CustomResourceDefinition</li>
+<li>Toolkit kinds: HelmRelease, HelmRepository, GitRepository, etc</li>
+<li>Custom resources that are compatible with <a href="https://github.com/kubernetes-sigs/cli-utils/tree/master/pkg/kstatus">kstatus</a></li>
+</ul>
+<p>Assuming the Kustomization source contains a Kubernetes Deployment named <code>backend</code>,
+a health check can be defined as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backend</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./webapp/backend/&quot;</span>
+  <span class="nt">prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+  <span class="nt">healthChecks</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+      <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backend</span>
+      <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dev</span>
+  <span class="nt">timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2m</span>
+</code></pre></div>
+<p>After applying the kustomize build output, the controller verifies if the rollout completed successfully.
+If the deployment was successful, the Kustomization ready condition is marked as <code>true</code>,
+if the rollout failed, or if it takes more than the specified timeout to complete, then the
+Kustomization ready condition is set to <code>false</code>. If the deployment becomes healthy on the next
+execution, then the Kustomization is marked as ready.</p>
+<p>When a Kustomization contains HelmRelease objects, instead of checking the underling Deployments, you can
+define a health check that waits for the HelmReleases to be reconciled with:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">15m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./releases/&quot;</span>
+  <span class="nt">prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+  <span class="nt">healthChecks</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">helm.toolkit.fluxcd.io/v1beta1</span>
+      <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HelmRelease</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frontend</span>
+      <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dev</span>
+    <span class="p p-Indicator">-</span> <span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">helm.toolkit.fluxcd.io/v1beta1</span>
+      <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HelmRelease</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backend</span>
+      <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dev</span>
+  <span class="nt">timeout</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+</code></pre></div>
+<p>If all the HelmRelease objects are successfully installed or upgraded, then the Kustomization will be marked as ready.</p>
+<h2 id="kustomization-dependencies">Kustomization dependencies<a class="headerlink" href="#kustomization-dependencies" title="Permanent link">&para;</a></h2>
+<p>When applying a Kustomization, you may need to make sure other resources exist before the
+workloads defined in your Kustomization are deployed.
+For example, a namespace must exist before applying resources to it.</p>
+<p>With <code>spec.dependsOn</code> you can specify that the execution of a Kustomization follows another.
+When you add <code>dependsOn</code> entries to a Kustomization, that Kustomization is applied
+only after all of its dependencies are ready. The readiness state of a Kustomization is determined by
+its last apply status condition.</p>
+<p>Assuming two Kustomizations:</p>
+<ul>
+<li><code>cert-manager</code> - reconciles the cert-manager CRDs and controller</li>
+<li><code>certs</code> - reconciles the cert-manager custom resources</li>
+</ul>
+<p>You can instruct the controller to apply the <code>cert-manager</code> Kustomization before <code>certs</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert-manager</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./cert-manager/controller&quot;</span>
+  <span class="nt">prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+  <span class="nt">healthChecks</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+      <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert-manager</span>
+      <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert-manager</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">certs</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">dependsOn</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cert-manager</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./cert-manager/certs&quot;</span>
+  <span class="nt">prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+</code></pre></div>
+<p>When combined with health assessment, a Kustomization will run after all its dependencies health checks are passing.
+For example, a service mesh proxy injector should be running before deploying applications inside the mesh.</p>
+<blockquote>
+<p><strong>Note</strong> that circular dependencies between Kustomizations must be avoided, otherwise the
+interdependent Kustomizations will never be applied on the cluster.</p>
+</blockquote>
+<h2 id="role-based-access-control">Role-based access control<a class="headerlink" href="#role-based-access-control" title="Permanent link">&para;</a></h2>
+<p>By default, a Kustomization apply runs under the cluster admin account and can create, modify, delete
+cluster level objects (namespaces, CRDs, etc) and namespeced objects (deployments, ingresses, etc).
+For certain Kustomizations a cluster admin may wish to control what types of Kubernetes objects can
+be reconciled and under which namespaces.
+To restrict a Kustomization, one can assign a service account under which the reconciliation is performed.</p>
+<p>Assuming you want to restrict a group of Kustomizations to a single namespace, you can create an account
+with a role binding that grants access only to that namespace:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Namespace</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp-reconciler</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Role</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp-reconciler</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+<span class="nt">rules</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">apiGroups</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">]</span>
+    <span class="nt">resources</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">]</span>
+    <span class="nt">verbs</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&#39;*&#39;</span><span class="p p-Indicator">]</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RoleBinding</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp-reconciler</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+<span class="nt">roleRef</span><span class="p">:</span>
+  <span class="nt">apiGroup</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io</span>
+  <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Role</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp-reconciler</span>
+<span class="nt">subjects</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp-reconciler</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Note</strong> that the namespace, RBAC and service account manifests should be
+placed in a Git source and applied with a Kustomization. The Kustomizations that
+are running under that service account should depend-on the one that contains the account.</p>
+</blockquote>
+<p>Create a Kustomization that prevents altering the cluster state outside of the <code>webapp</code> namespace:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backend</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">serviceAccountName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp-reconciler</span>
+  <span class="nt">dependsOn</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">common</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./webapp/backend/&quot;</span>
+  <span class="nt">prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">webapp</span>
+</code></pre></div>
+<p>When the controller reconciles the <code>frontend-webapp</code> Kustomization, it will impersonate the <code>webapp-reconciler</code>
+account. If the Kustomization contains cluster level objects like CRDs or objects belonging to a different
+namespace, the reconciliation will fail since the account it runs under has no permissions to alter objects
+outside of the <code>webapp</code> namespace.</p>
+<h2 id="override-kustomize-config">Override kustomize config<a class="headerlink" href="#override-kustomize-config" title="Permanent link">&para;</a></h2>
+<p>The Kustomization has a set of fields to extend and/or override the Kustomize
+patches and namespace on all the Kubernetes objects reconciled by the resource,
+offering support for the following Kustomize directives:</p>
+<ul>
+<li><a href="https://kubectl.docs.kubernetes.io/references/kustomize/namespace/">namespace</a></li>
+<li><a href="https://kubectl.docs.kubernetes.io/references/kustomize/patchesstrategicmerge/">patchesStrategicMerge</a></li>
+<li><a href="https://kubectl.docs.kubernetes.io/references/kustomize/patchesjson6902/">patchesJson6902</a></li>
+<li><a href="https://kubectl.docs.kubernetes.io/references/kustomize/images/">images</a></li>
+</ul>
+<h3 id="target-namespace">Target namespace<a class="headerlink" href="#target-namespace" title="Permanent link">&para;</a></h3>
+<p>To configure the <a href="https://kubectl.docs.kubernetes.io/references/kustomize/namespace/">Kustomize <code>namespace</code></a>
+and overwrite the namespace of all the Kubernetes objects reconciled by the <code>Kustomization</code>,
+<code>spec.targetNamespace</code> can be defined:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="c1"># ...omitted for brevity</span>
+  <span class="nt">targetNamespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
+</code></pre></div>
+<p>The <code>targetNamespace</code> is expected to exist.</p>
+<h3 id="strategic-merge-patches">Strategic Merge patches<a class="headerlink" href="#strategic-merge-patches" title="Permanent link">&para;</a></h3>
+<p>To add <a href="https://kubectl.docs.kubernetes.io/references/kustomize/patchesstrategicmerge/">Kustomize <code>patchesStrategicMerge</code> entries</a>
+to the configuration, <code>spec.patchesStrategicMerge</code> can be defined with a list
+of strategic merge patches in YAML format:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="c1"># ...omitted for brevity</span>
+  <span class="nt">patchesStrategicMerge</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+    <span class="nt">metadata</span><span class="p">:</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">spec</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span>
+        <span class="nt">spec</span><span class="p">:</span>
+          <span class="nt">serviceAccount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">custom-service-account</span>
+</code></pre></div>
+<h3 id="json-6902-patches">JSON 6902 patches<a class="headerlink" href="#json-6902-patches" title="Permanent link">&para;</a></h3>
+<p>To add <a href="https://kubectl.docs.kubernetes.io/references/kustomize/patchesjson6902/">Kustomize <code>patchesJson6902</code> entries</a>
+to the configuration, and patch resources using the <a href="https://tools.ietf.org/html/rfc6902">JSON 6902 standard</a>,
+<code>spec.patchesJson6902</code>, the items must contain a <code>target</code> selector and JSON 6902
+<code>patch</code> document:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="c1"># ...omitted for brevity</span>
+  <span class="nt">patchesJson6902</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">target</span><span class="p">:</span>
+      <span class="nt">version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+      <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">patch</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">op</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add</span>
+      <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/metadata/annotations/key</span>
+      <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+</code></pre></div>
+<h3 id="images">Images<a class="headerlink" href="#images" title="Permanent link">&para;</a></h3>
+<p>To add <a href="https://kubectl.docs.kubernetes.io/references/kustomize/images/">Kustomize <code>images</code> entries</a>
+to the configuration, and overwrite the name, tag or digest of container images
+without creating patches, <code>spec.images</code> can be defined:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="c1"># ...omitted for brevity</span>
+  <span class="nt">images</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">newName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-registry/podinfo</span>
+    <span class="nt">newTag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">newTag</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.8.0</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">newName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-podinfo</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">digest</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sha256:24a0c4b4a4c0eb97a1aabb8e29f18e917d05abfe1b7a7c07857230879ce7d3d3</span>
+</code></pre></div>
+<h2 id="variable-substitution">Variable substitution<a class="headerlink" href="#variable-substitution" title="Permanent link">&para;</a></h2>
+<p>With <code>spec.postBuild.substitute</code> you can provide a map of key/value pairs holding the
+variables to be substituted in the final YAML manifest, after kustomize build.</p>
+<p>This offers basic templating for your manifests including support
+for <a href="https://github.com/drone/envsubst">bash string replacement functions</a> e.g.:</p>
+<ul>
+<li><code>${var:=default}</code></li>
+<li><code>${var:position}</code></li>
+<li><code>${var:position:length}</code></li>
+<li><code>${var/substring/replacement}</code></li>
+</ul>
+<p>Assuming you have manifests with the following variables:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Namespace</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apps</span>
+  <span class="nt">labels</span><span class="p">:</span>
+    <span class="nt">environment</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${cluster_env:=dev}</span>
+    <span class="nt">region</span><span class="p">:</span> <span class="s">&quot;${cluster_region}&quot;</span>
+</code></pre></div>
+<p>You can specify the variables and their values in the Kustomization definition under
+the <code>substitute</code> post build section:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apps</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./apps/&quot;</span>
+  <span class="nt">postBuild</span><span class="p">:</span>
+    <span class="nt">substitute</span><span class="p">:</span>
+      <span class="nt">cluster_env</span><span class="p">:</span> <span class="s">&quot;prod&quot;</span>
+      <span class="nt">cluster_region</span><span class="p">:</span> <span class="s">&quot;eu-central-1&quot;</span>
+</code></pre></div>
+<p>Note that you should prefix the variables that get replaced by kustomize-controller
+to avoid conflicts with any existing scripts embedded in ConfigMaps or container commands.</p>
+<p>You can replicate the controller post-build substitutions locally using
+<a href="https://github.com/kubernetes-sigs/kustomize">kustomize</a>
+and Drone's <a href="https://github.com/drone/envsubst">envsubst</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>go install github.com/drone/envsubst/cmd/envsubst
+
+<span class="gp">$ </span><span class="nb">export</span> <span class="nv">cluster_region</span><span class="o">=</span>eu-central-1
+<span class="gp">$ </span>kustomize build ./apps/ <span class="p">|</span> <span class="nv">$GOPATH</span>/bin/envsubst 
+<span class="go">---</span>
+<span class="go">apiVersion: v1</span>
+<span class="go">kind: Namespace</span>
+<span class="go">metadata:</span>
+<span class="go">  name: apps</span>
+<span class="go">  labels:</span>
+<span class="go">    environment: dev</span>
+<span class="go">    region: eu-central-1</span>
+</code></pre></div>
+<h2 id="remote-clusters-cluster-api">Remote Clusters / Cluster-API<a class="headerlink" href="#remote-clusters-cluster-api" title="Permanent link">&para;</a></h2>
+<p>If the <code>kubeConfig</code> field is set, objects will be applied, health-checked, pruned, and deleted for the default
+cluster specified in that KubeConfig instead of using the in-cluster ServiceAccount.</p>
+<p>The secret defined in the <code>kubeConfig.SecretRef</code> must exist in the same namespace as the Kustomization.
+On every reconciliation, the KubeConfig bytes will be loaded from the <code>values</code> key of the secret's data, and
+the secret can thus be regularly updated if cluster-access-tokens have to rotate due to expiration.</p>
+<p>This composes well with Cluster API bootstrap providers such as CAPBK (kubeadm) as well as the CAPA (AWS) EKS
+integration.</p>
+<p>To reconcile a Kustomization to a CAPI controlled cluster, put the <code>Kustomization</code> in the same namespace as your
+<code>Cluster</code> object, and set the <code>kubeConfig.secretRef.name</code> to <code>&lt;cluster-name&gt;-kubeconfig</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cluster.x-k8s.io/v1alpha3</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Cluster</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage</span>  <span class="c1"># the kubeconfig Secret will contain the Cluster name</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">capi-stage</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">clusterNetwork</span><span class="p">:</span>
+    <span class="nt">pods</span><span class="p">:</span>
+      <span class="nt">cidrBlocks</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">10.100.0.0/16</span>
+    <span class="nt">serviceDomain</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage-cluster.local</span>
+    <span class="nt">services</span><span class="p">:</span>
+      <span class="nt">cidrBlocks</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">10.200.0.0/12</span>
+  <span class="nt">controlPlaneRef</span><span class="p">:</span>
+    <span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">controlplane.cluster.x-k8s.io/v1alpha3</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KubeadmControlPlane</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage-control-plane</span>
+    <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">capi-stage</span>
+  <span class="nt">infrastructureRef</span><span class="p">:</span>
+    <span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">infrastructure.cluster.x-k8s.io/v1alpha3</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DockerCluster</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage</span>
+    <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">capi-stage</span>
+<span class="nn">---</span>
+<span class="c1"># ... unrelated Cluster API objects omitted for brevity ...</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cluster-addons</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">capi-stage</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./config/addons/&quot;</span>
+  <span class="nt">prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cluster-addons</span>
+  <span class="nt">kubeConfig</span><span class="p">:</span>
+    <span class="nt">secretRef</span><span class="p">:</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stage-kubeconfig</span>  <span class="c1"># Cluster API creates this for the matching Cluster</span>
+</code></pre></div>
+<p>The Cluster and Kustomization can be created at the same time.
+The Kustomization will eventually reconcile once the cluster is available.</p>
+<p>If you wish to target clusters created by other means than CAPI, you can create a ServiceAccount
+on the remote cluster, generate a KubeConfig for that account, and then create a secret on the
+cluster where kustomize-controller is running e.g.:</p>
+<div class="highlight"><pre><span></span><code>kubectl create secret generic prod-kubeconfig <span class="se">\</span>
+    --from-file<span class="o">=</span><span class="nv">value</span><span class="o">=</span>./kubeconfig
+</code></pre></div>
+<blockquote>
+<p><strong>Note</strong> that the KubeConfig should be self-contained and not rely on binaries, environment,
+or credential files from the kustomize-controller Pod.
+This matches the constraints of KubeConfigs from current Cluster API providers.
+KubeConfigs with <code>cmd-path</code> in them likely won't work without a custom,
+per-provider installation of kustomize-controller.</p>
+</blockquote>
+<h2 id="secrets-decryption">Secrets decryption<a class="headerlink" href="#secrets-decryption" title="Permanent link">&para;</a></h2>
+<p>In order to store secrets safely in a public or private Git repository,
+you can use <a href="https://github.com/mozilla/sops">Mozilla SOPS</a>
+and encrypt your Kubernetes Secrets data with OpenPGP keys.</p>
+<p>Generate a GPG key <strong>without passphrase</strong> using <a href="https://www.gnupg.org/">gnupg</a>
+then use sops to encrypt a Kubernetes secret:</p>
+<div class="highlight"><pre><span></span><code>sops --pgp<span class="o">=</span>FBC7B9E2A4F9289AC0C1D4843D16CEE4A27381B4 <span class="se">\</span>
+--encrypt --encrypted-regex <span class="s1">&#39;^(data|stringData)$&#39;</span> --in-place my-secret.yaml
+</code></pre></div>
+<p>Commit and push the encrypted file to Git.</p>
+<blockquote>
+<p><strong>Note</strong> that you should encrypt only the <code>data</code> section, encrypting the Kubernetes secret
+metadata, kind or apiVersion is not supported by kustomize-controller.</p>
+</blockquote>
+<p>Create a secret in the <code>default</code> namespace with the OpenPGP private key:</p>
+<div class="highlight"><pre><span></span><code>gpg --export-secret-keys --armor FBC7B9E2A4F9289AC0C1D4843D16CEE4A27381B4 <span class="p">|</span>
+kubectl -n default create secret generic sops-gpg <span class="se">\</span>
+--from-file<span class="o">=</span>sops.asc<span class="o">=</span>/dev/stdin
+</code></pre></div>
+<p>Configure decryption by referring the private key secret:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-secrets</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./&quot;</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-secrets</span>
+  <span class="nt">decryption</span><span class="p">:</span>
+    <span class="nt">provider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sops</span>
+    <span class="nt">secretRef</span><span class="p">:</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sops-pgp</span>
+</code></pre></div>
+<h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h2>
+<p>When the controller completes a Kustomization apply, reports the result in the <code>status</code> sub-resource.</p>
+<p>A successful reconciliation sets the ready condition to <code>true</code> and updates the revision field:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">status</span><span class="p">:</span>
+  <span class="nt">conditions</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">lastTransitionTime</span><span class="p">:</span> <span class="s">&quot;2020-09-17T19:28:48Z&quot;</span>
+    <span class="nt">message</span><span class="p">:</span> <span class="s">&quot;Applied</span><span class="nv"> </span><span class="s">revision:</span><span class="nv"> </span><span class="s">master/a1afe267b54f38b46b487f6e938a6fd508278c07&quot;</span>
+    <span class="nt">reason</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ReconciliationSucceeded</span>
+    <span class="nt">status</span><span class="p">:</span> <span class="s">&quot;True&quot;</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ready</span>
+  <span class="nt">lastAppliedRevision</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">master/a1afe267b54f38b46b487f6e938a6fd508278c07</span>
+  <span class="nt">lastAttemptedRevision</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">master/a1afe267b54f38b46b487f6e938a6fd508278c07</span>
+</code></pre></div>
+<p>You can wait for the kustomize controller to complete a reconciliation with:</p>
+<div class="highlight"><pre><span></span><code>kubectl <span class="nb">wait</span> kustomization/backend --for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>ready
+</code></pre></div>
+<p>The controller logs the Kubernetes objects:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;ts&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-09-17T07:27:11.921Z&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;logger&quot;</span><span class="p">:</span> <span class="s2">&quot;controllers.Kustomization&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Kustomization applied in 1.436096591s&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;kustomization&quot;</span><span class="p">:</span> <span class="s2">&quot;default/backend&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;output&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;service/backend&quot;</span><span class="p">:</span> <span class="s2">&quot;created&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;deployment.apps/backend&quot;</span><span class="p">:</span> <span class="s2">&quot;created&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;horizontalpodautoscaler.autoscaling/backend&quot;</span><span class="p">:</span> <span class="s2">&quot;created&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>A failed reconciliation sets the ready condition to <code>false</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">status</span><span class="p">:</span>
+  <span class="nt">conditions</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">lastTransitionTime</span><span class="p">:</span> <span class="s">&quot;2020-09-17T07:26:48Z&quot;</span>
+    <span class="nt">message</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">Service</span><span class="nv"> </span><span class="s">&#39;backend&#39;</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">invalid:</span><span class="nv"> </span><span class="s">spec.type:</span><span class="nv"> </span><span class="s">Unsupported</span><span class="nv"> </span><span class="s">value:</span><span class="nv"> </span><span class="s">&#39;Ingress&#39;&quot;</span>
+    <span class="nt">reason</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ValidationFailed</span>
+    <span class="nt">status</span><span class="p">:</span> <span class="s">&quot;False&quot;</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ready</span>
+  <span class="nt">lastAppliedRevision</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">master/a1afe267b54f38b46b487f6e938a6fd508278c07</span>
+  <span class="nt">lastAttemptedRevision</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">master/7c500d302e38e7e4a3f327343a8a5c21acaaeb87</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Note</strong> that the last applied revision is updated only on a successful reconciliation.</p>
+</blockquote>
+<p>When a reconciliation fails, the controller logs the error and issues a Kubernetes event:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;ts&quot;</span><span class="p">:</span> <span class="s2">&quot;2020-09-17T07:27:11.921Z&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;logger&quot;</span><span class="p">:</span> <span class="s2">&quot;controllers.Kustomization&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;kustomization&quot;</span><span class="p">:</span> <span class="s2">&quot;default/backend&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;The Service &#39;backend&#39; is invalid: spec.type: Unsupported value: &#39;Ingress&#39;&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../controller/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../api/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Kustomize API Reference
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/vendor.18f0862e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.994580cf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../../assets/javascripts/worker/search.9c0e82ba.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

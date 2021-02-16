@@ -1,0 +1,3096 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Open and extensible continuous delivery solution for Kubernetes">
+      
+      
+      
+        <meta name="author" content="The Flux project">
+      
+      
+        <link rel="canonical" href="https://toolkit.fluxcd.io/faq/">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.8">
+    
+    
+      
+        <title>FAQ - Flux | GitOps Toolkit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.cb6bc1d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.39b8e14a.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#2094f3">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../_static/custom.css">
+    
+    
+      
+    
+    
+
+<meta property="og:url" content="https://toolkit.fluxcd.io/faq/">
+
+<meta property="og:title" content="FAQ - Flux | GitOps Toolkit">
+
+<meta property="og:description" content="Open and extensible continuous delivery solution for Kubernetes">
+<meta property="og:image" content="https://toolkit.fluxcd.io/_files/toolkit-icon.png">
+<meta property="og:image:alt" content="GitOps Toolkit">
+<meta property="og:image:type" content="image/png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@stefanprodan">
+<meta name="twitter:creator" content="@stefanprodan">
+
+<meta property="twitter:title" content="FAQ - Flux | GitOps Toolkit">
+
+<meta name="twitter:description" content="Open and extensible continuous delivery solution for Kubernetes">
+<meta name="twitter:image" content="https://toolkit.fluxcd.io/_files/toolkit-icon.png">
+<meta name="twitter:image:alt" content="GitOps Toolkit">
+
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue" data-md-color-accent="indigo">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#frequently-asked-questions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://toolkit.fluxcd.io" title="Flux | GitOps Toolkit" class="md-header-nav__button md-logo" aria-label="Flux | GitOps Toolkit">
+      
+  <img src="../_files/flux-icon@2x.png" alt="logo">
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            Flux | GitOps Toolkit
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              FAQ
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/fluxcd/flux2" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fluxcd/flux2
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://toolkit.fluxcd.io" title="Flux | GitOps Toolkit" class="md-nav__button md-logo" aria-label="Flux | GitOps Toolkit">
+      
+  <img src="../_files/flux-icon@2x.png" alt="logo">
+
+    </a>
+    Flux | GitOps Toolkit
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/fluxcd/flux2" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fluxcd/flux2
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../core-concepts/" class="md-nav__link">
+        Core Concepts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-started/" class="md-nav__link">
+        Get Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
+      
+      <label class="md-nav__link" for="nav-4">
+        Migration
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Migration" data-md-level="1">
+        <label class="md-nav__title" for="nav-4">
+          <span class="md-nav__icon md-icon"></span>
+          Migration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/flux-v1-migration/" class="md-nav__link">
+        Migrate from Flux v1
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/flux-v1-automation-migration/" class="md-nav__link">
+        Migrate from Flux v1 image update automation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/helm-operator-migration/" class="md-nav__link">
+        Migrate from the Helm Operator
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+      
+      <label class="md-nav__link" for="nav-5">
+        Guides
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/helmreleases/" class="md-nav__link">
+        Manage Helm Releases
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/notifications/" class="md-nav__link">
+        Setup Notifications
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/webhook-receivers/" class="md-nav__link">
+        Setup Webhook Receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/monitoring/" class="md-nav__link">
+        Monitoring with Prometheus
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/sealed-secrets/" class="md-nav__link">
+        Sealed Secrets
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/mozilla-sops/" class="md-nav__link">
+        Mozilla SOPS
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/image-update/" class="md-nav__link">
+        Automate image updates to Git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/sortable-image-tags/" class="md-nav__link">
+        Sortable image tags to use with automation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6" >
+      
+      <label class="md-nav__link" for="nav-6">
+        Toolkit Components
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Toolkit Components" data-md-level="1">
+        <label class="md-nav__title" for="nav-6">
+          <span class="md-nav__icon md-icon"></span>
+          Toolkit Components
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-2" type="checkbox" id="nav-6-2" >
+      
+      <label class="md-nav__link" for="nav-6-2">
+        Source Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Source Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-2">
+          <span class="md-nav__icon md-icon"></span>
+          Source Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/source/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/source/gitrepositories/" class="md-nav__link">
+        GitRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/source/helmrepositories/" class="md-nav__link">
+        HelmRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/source/helmcharts/" class="md-nav__link">
+        HelmChart CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/source/buckets/" class="md-nav__link">
+        Bucket CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/source/api/" class="md-nav__link">
+        Source API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-3" type="checkbox" id="nav-6-3" >
+      
+      <label class="md-nav__link" for="nav-6-3">
+        Kustomize Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Kustomize Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-3">
+          <span class="md-nav__icon md-icon"></span>
+          Kustomize Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/kustomize/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/kustomize/kustomization/" class="md-nav__link">
+        Kustomization CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/kustomize/api/" class="md-nav__link">
+        Kustomize API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-4" type="checkbox" id="nav-6-4" >
+      
+      <label class="md-nav__link" for="nav-6-4">
+        Helm Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Helm Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-4">
+          <span class="md-nav__icon md-icon"></span>
+          Helm Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/helm/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/helm/helmreleases/" class="md-nav__link">
+        HelmRelease CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/helm/api/" class="md-nav__link">
+        Helm API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-5" type="checkbox" id="nav-6-5" >
+      
+      <label class="md-nav__link" for="nav-6-5">
+        Notification Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Notification Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-5">
+          <span class="md-nav__icon md-icon"></span>
+          Notification Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/notification/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/notification/event/" class="md-nav__link">
+        Event
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/notification/provider/" class="md-nav__link">
+        Provider CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/notification/alert/" class="md-nav__link">
+        Alert CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/notification/receiver/" class="md-nav__link">
+        Receiver CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/notification/api/" class="md-nav__link">
+        Notification API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-6" type="checkbox" id="nav-6-6" >
+      
+      <label class="md-nav__link" for="nav-6-6">
+        Image Automation Controllers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Image Automation Controllers" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-6">
+          <span class="md-nav__icon md-icon"></span>
+          Image Automation Controllers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/image/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/image/imagerepositories/" class="md-nav__link">
+        ImageRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/image/imagepolicies/" class="md-nav__link">
+        ImagePolicy CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/image/imageupdateautomations/" class="md-nav__link">
+        ImageUpdateAutomation CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/image/automation-api/" class="md-nav__link">
+        Automation API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" >
+      
+      <label class="md-nav__link" for="nav-7">
+        Flux CLI
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Flux CLI" data-md-level="1">
+        <label class="md-nav__title" for="nav-7">
+          <span class="md-nav__icon md-icon"></span>
+          Flux CLI
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_bootstrap/" class="md-nav__link">
+        Bootstrap
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_bootstrap_github/" class="md-nav__link">
+        Bootstrap github
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_bootstrap_gitlab/" class="md-nav__link">
+        Bootstrap gitlab
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_check/" class="md-nav__link">
+        Check
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create/" class="md-nav__link">
+        Create
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_kustomization/" class="md-nav__link">
+        Create kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_helmrelease/" class="md-nav__link">
+        Create helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_source/" class="md-nav__link">
+        Create source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_source_git/" class="md-nav__link">
+        Create source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_source_helm/" class="md-nav__link">
+        Create source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_source_bucket/" class="md-nav__link">
+        Create source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_alert-provider/" class="md-nav__link">
+        Create alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_alert/" class="md-nav__link">
+        Create alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_receiver/" class="md-nav__link">
+        Create receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_image/" class="md-nav__link">
+        Create image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_image_policy/" class="md-nav__link">
+        Create image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_image_repository/" class="md-nav__link">
+        Create image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_image_update/" class="md-nav__link">
+        Create image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_tenant/" class="md-nav__link">
+        Create tenant
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_secret/" class="md-nav__link">
+        Create secret
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_secret_git/" class="md-nav__link">
+        Create secret git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_secret_helm/" class="md-nav__link">
+        Create secret helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_create_secret_tls/" class="md-nav__link">
+        Create secret tls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete/" class="md-nav__link">
+        Delete
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_kustomization/" class="md-nav__link">
+        Delete kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_helmrelease/" class="md-nav__link">
+        Delete helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_source/" class="md-nav__link">
+        Delete source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_source_git/" class="md-nav__link">
+        Delete source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_source_helm/" class="md-nav__link">
+        Delete source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_source_bucket/" class="md-nav__link">
+        Delete source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_image/" class="md-nav__link">
+        Delete image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_image_policy/" class="md-nav__link">
+        Delete image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_image_repository/" class="md-nav__link">
+        Delete image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_delete_image_update/" class="md-nav__link">
+        Delete image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export/" class="md-nav__link">
+        Export
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_kustomization/" class="md-nav__link">
+        Export kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_helmrelease/" class="md-nav__link">
+        Export helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_source/" class="md-nav__link">
+        Export source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_source_git/" class="md-nav__link">
+        Export source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_source_helm/" class="md-nav__link">
+        Export source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_source_bucket/" class="md-nav__link">
+        Export source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_alert-provider/" class="md-nav__link">
+        Export alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_alert/" class="md-nav__link">
+        Export alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_receiver/" class="md-nav__link">
+        Export receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_image/" class="md-nav__link">
+        Export image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_image_policy/" class="md-nav__link">
+        Export image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_image_repository/" class="md-nav__link">
+        Export image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_export_image_update/" class="md-nav__link">
+        Export image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get/" class="md-nav__link">
+        Get
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_kustomizations/" class="md-nav__link">
+        Get kustomizations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_helmreleases/" class="md-nav__link">
+        Get helmreleases
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_sources/" class="md-nav__link">
+        Get sources
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_sources_git/" class="md-nav__link">
+        Get sources git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_sources_helm/" class="md-nav__link">
+        Get sources helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_sources_chart/" class="md-nav__link">
+        Get sources chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_sources_bucket/" class="md-nav__link">
+        Get sources bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_alert-provider.md" class="md-nav__link">
+        Get alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_alerts/" class="md-nav__link">
+        Get alerts
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_alert-providers/" class="md-nav__link">
+        Get alert providers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_receivers/" class="md-nav__link">
+        Get receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_images/" class="md-nav__link">
+        Get images
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_images_policy/" class="md-nav__link">
+        Get images policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_images_repository/" class="md-nav__link">
+        Get images repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_get_images_update/" class="md-nav__link">
+        Get images update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_install/" class="md-nav__link">
+        Install
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume/" class="md-nav__link">
+        Resume
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_kustomization/" class="md-nav__link">
+        Resume kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_helmrelease/" class="md-nav__link">
+        Resume helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_source/" class="md-nav__link">
+        Resume source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_source_git/" class="md-nav__link">
+        Resume source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_source_helm/" class="md-nav__link">
+        Resume source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_source_chart/" class="md-nav__link">
+        Resume source chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_source_bucket/" class="md-nav__link">
+        Resume source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_alert-provider.md" class="md-nav__link">
+        Resume alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_alert/" class="md-nav__link">
+        Resume alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_receiver/" class="md-nav__link">
+        Resume receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_image/" class="md-nav__link">
+        Resume image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_image_repository/" class="md-nav__link">
+        Resume image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_resume_image_update/" class="md-nav__link">
+        Resume image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend/" class="md-nav__link">
+        Suspend
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_kustomization/" class="md-nav__link">
+        Suspend kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_helmrelease/" class="md-nav__link">
+        Suspend helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_source/" class="md-nav__link">
+        Suspend source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_source_git/" class="md-nav__link">
+        Suspend source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_source_helm/" class="md-nav__link">
+        Suspend source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_source_chart/" class="md-nav__link">
+        Suspend source chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_source_bucket/" class="md-nav__link">
+        Suspend source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_alert-provider.md" class="md-nav__link">
+        Suspend alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_alert/" class="md-nav__link">
+        Suspend alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_receiver/" class="md-nav__link">
+        Suspend receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_image/" class="md-nav__link">
+        Suspend image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_image_repository/" class="md-nav__link">
+        Suspend image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_suspend_image_update/" class="md-nav__link">
+        Suspend image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile/" class="md-nav__link">
+        Reconcile
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_kustomization/" class="md-nav__link">
+        Reconcile kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_helmrelease/" class="md-nav__link">
+        Reconcile helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_source/" class="md-nav__link">
+        Reconcile source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_source_git/" class="md-nav__link">
+        Reconcile source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_source_helm/" class="md-nav__link">
+        Reconcile source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_source_bucket/" class="md-nav__link">
+        Reconcile source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_image/" class="md-nav__link">
+        Reconcile image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_image_repository/" class="md-nav__link">
+        Reconcile image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_reconcile_image_update/" class="md-nav__link">
+        Reconcile image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cmd/flux_uninstall/" class="md-nav__link">
+        Uninstall
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" >
+      
+      <label class="md-nav__link" for="nav-8">
+        Dev Guides
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Dev Guides" data-md-level="1">
+        <label class="md-nav__title" for="nav-8">
+          <span class="md-nav__icon md-icon"></span>
+          Dev Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev-guides/source-watcher/" class="md-nav__link">
+        Watching for source changes
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev-guides/debugging/" class="md-nav__link">
+        Advanced debugging
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        Roadmap
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          FAQ
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        FAQ
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#kustomize-questions" class="md-nav__link">
+    Kustomize questions
+  </a>
+  
+    <nav class="md-nav" aria-label="Kustomize questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#are-there-two-kustomization-types" class="md-nav__link">
+    Are there two Kustomization types?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-use-them-together" class="md-nav__link">
+    How do I use them together?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-kustomization-reconciliation" class="md-nav__link">
+    What is a Kustomization reconciliation?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-use-repositories-with-plain-yamls" class="md-nav__link">
+    Can I use repositories with plain YAMLs?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-behavior-of-kustomize-used-by-flux" class="md-nav__link">
+    What is the behavior of Kustomize used by Flux
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#helm-questions" class="md-nav__link">
+    Helm questions
+  </a>
+  
+    <nav class="md-nav" aria-label="Helm questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-debug-not-ready-errors" class="md-nav__link">
+    How to debug "not ready" errors?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flux-v1-vs-v2-questions" class="md-nav__link">
+    Flux v1 vs v2 questions
+  </a>
+  
+    <nav class="md-nav" aria-label="Flux v1 vs v2 questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-does-flux-v2-mean-for-flux" class="md-nav__link">
+    What does Flux v2 mean for Flux?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-did-you-rewrite-flux" class="md-nav__link">
+    Why did you rewrite Flux?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-are-significant-new-differences-between-flux-v1-and-flux-v2" class="md-nav__link">
+    What are significant new differences between Flux v1 and Flux v2?
+  </a>
+  
+    <nav class="md-nav" aria-label="What are significant new differences between Flux v1 and Flux v2?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reconciliation" class="md-nav__link">
+    Reconciliation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kustomize-support" class="md-nav__link">
+    kustomize support
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helm-integration" class="md-nav__link">
+    Helm integration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifications-webhooks-observability" class="md-nav__link">
+    Notifications, webhooks, observability
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-can-i-get-involved" class="md-nav__link">
+    How can I get involved?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-there-any-breaking-changes" class="md-nav__link">
+    Are there any breaking changes?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-the-gitops-toolkit-related-to-the-gitops-engine" class="md-nav__link">
+    Is the GitOps Toolkit related to the GitOps Engine?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#kustomize-questions" class="md-nav__link">
+    Kustomize questions
+  </a>
+  
+    <nav class="md-nav" aria-label="Kustomize questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#are-there-two-kustomization-types" class="md-nav__link">
+    Are there two Kustomization types?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-use-them-together" class="md-nav__link">
+    How do I use them together?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-kustomization-reconciliation" class="md-nav__link">
+    What is a Kustomization reconciliation?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-use-repositories-with-plain-yamls" class="md-nav__link">
+    Can I use repositories with plain YAMLs?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-behavior-of-kustomize-used-by-flux" class="md-nav__link">
+    What is the behavior of Kustomize used by Flux
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#helm-questions" class="md-nav__link">
+    Helm questions
+  </a>
+  
+    <nav class="md-nav" aria-label="Helm questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-debug-not-ready-errors" class="md-nav__link">
+    How to debug "not ready" errors?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flux-v1-vs-v2-questions" class="md-nav__link">
+    Flux v1 vs v2 questions
+  </a>
+  
+    <nav class="md-nav" aria-label="Flux v1 vs v2 questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-does-flux-v2-mean-for-flux" class="md-nav__link">
+    What does Flux v2 mean for Flux?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-did-you-rewrite-flux" class="md-nav__link">
+    Why did you rewrite Flux?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-are-significant-new-differences-between-flux-v1-and-flux-v2" class="md-nav__link">
+    What are significant new differences between Flux v1 and Flux v2?
+  </a>
+  
+    <nav class="md-nav" aria-label="What are significant new differences between Flux v1 and Flux v2?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reconciliation" class="md-nav__link">
+    Reconciliation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kustomize-support" class="md-nav__link">
+    kustomize support
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#helm-integration" class="md-nav__link">
+    Helm integration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifications-webhooks-observability" class="md-nav__link">
+    Notifications, webhooks, observability
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-can-i-get-involved" class="md-nav__link">
+    How can I get involved?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-there-any-breaking-changes" class="md-nav__link">
+    Are there any breaking changes?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-the-gitops-toolkit-related-to-the-gitops-engine" class="md-nav__link">
+    Is the GitOps Toolkit related to the GitOps Engine?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="frequently-asked-questions">Frequently asked questions<a class="headerlink" href="#frequently-asked-questions" title="Permanent link">&para;</a></h1>
+<h2 id="kustomize-questions">Kustomize questions<a class="headerlink" href="#kustomize-questions" title="Permanent link">&para;</a></h2>
+<h3 id="are-there-two-kustomization-types">Are there two Kustomization types?<a class="headerlink" href="#are-there-two-kustomization-types" title="Permanent link">&para;</a></h3>
+<p>Yes, the <code>kustomization.kustomize.toolkit.fluxcd.io</code> is a Kubernetes
+<a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">custom resource</a>
+while <code>kustomization.kustomize.config.k8s.io</code> is the type used to configure a
+<a href="https://kubectl.docs.kubernetes.io/references/kustomize/">Kustomize overlay</a>.</p>
+<p>The <code>kustomization.kustomize.toolkit.fluxcd.io</code> object refers to a <code>kustomization.yaml</code>
+file path inside a Git repository or Bucket source.</p>
+<h3 id="how-do-i-use-them-together">How do I use them together?<a class="headerlink" href="#how-do-i-use-them-together" title="Permanent link">&para;</a></h3>
+<p>Assuming an app repository with <code>./deploy/prod/kustomization.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.config.k8s.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">resources</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">deployment.yaml</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">service.yaml</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ingress.yaml</span>
+</code></pre></div>
+<p>Define a source of type <code>gitrepository.source.toolkit.fluxcd.io</code>
+that pulls changes from the app repository every 5 minutes inside the cluster:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/my-org/my-app</span>
+  <span class="nt">ref</span><span class="p">:</span>
+    <span class="nt">branch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">main</span>
+</code></pre></div>
+<p>Then define a <code>kustomization.kustomize.toolkit.fluxcd.io</code> that uses the <code>kustomization.yaml</code>
+from <code>./deploy/prod</code> to determine which resources to create, update or delete:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">15m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./deploy/prod&quot;</span>
+  <span class="nt">prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+</code></pre></div>
+<h3 id="what-is-a-kustomization-reconciliation">What is a Kustomization reconciliation?<a class="headerlink" href="#what-is-a-kustomization-reconciliation" title="Permanent link">&para;</a></h3>
+<p>In the above example, we pull changes from Git every 5 minutes,
+and a new commit will trigger a reconciliation of
+all the <code>Kustomization</code> objects using that source.</p>
+<p>Depending on your configuration, a reconciliation can mean:</p>
+<ul>
+<li>generating a kustomization.yaml file in the specified path</li>
+<li>building the kustomize overlay</li>
+<li>decrypting secrets</li>
+<li>validating the manifests with client or server-side dry-run</li>
+<li>applying changes on the cluster</li>
+<li>health checking of deployed workloads</li>
+<li>garbage collection of resources removed from Git</li>
+<li>issuing events about the reconciliation result</li>
+<li>recoding metrics about the reconciliation process </li>
+</ul>
+<p>The 15 minutes reconciliation interval, is the interval at which you want to undo manual changes
+.e.g. <code>kubectl set image deployment/my-app</code> by reapplying the latest commit on the cluster.</p>
+<p>Note that a reconciliation will override all fields of a Kubernetes object, that diverge from Git.
+For example, you'll have to omit the <code>spec.replicas</code> field from your <code>Deployments</code> YAMLs if you 
+are using a <code>HorizontalPodAutoscaler</code> that changes the replicas in-cluster.</p>
+<h3 id="can-i-use-repositories-with-plain-yamls">Can I use repositories with plain YAMLs?<a class="headerlink" href="#can-i-use-repositories-with-plain-yamls" title="Permanent link">&para;</a></h3>
+<p>Yes, you can specify the path where the Kubernetes manifests are,
+and kustomize-controller will generate a <code>kustomization.yaml</code> if one doesn't exist.</p>
+<p>Assuming an app repository with the following structure:</p>
+<div class="highlight"><pre><span></span><code>├── deploy
+│   └── prod
+│       ├── .yamllint.yaml
+│       ├── deployment.yaml
+│       ├── service.yaml
+│       └── ingress.yaml
+└── src
+</code></pre></div>
+<p>Create a <code>GitRepository</code> definition and exclude all the files that are not Kubernetes manifests:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m</span>
+  <span class="nt">url</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/my-org/my-app</span>
+  <span class="nt">ref</span><span class="p">:</span>
+    <span class="nt">branch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">main</span>
+  <span class="nt">ignore</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+    <span class="no"># exclude all</span>
+    <span class="no">/*</span>
+    <span class="no"># include deploy dir</span>
+    <span class="no">!/deploy</span>
+    <span class="no"># exclude non-Kubernetes YAMLs</span>
+    <span class="no">/deploy/**/.yamllint.yaml</span>
+</code></pre></div>
+<p>Then create a <code>Kustomization</code> definition to reconcile the <code>./deploy/prod</code> dir:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kustomize.toolkit.fluxcd.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">15m</span>
+  <span class="nt">path</span><span class="p">:</span> <span class="s">&quot;./deploy/prod&quot;</span>
+  <span class="nt">prune</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">sourceRef</span><span class="p">:</span>
+    <span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GitRepository</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+</code></pre></div>
+<p>With the above configuration, source-controller will pull the Kubernetes manifests
+from the app repository and kustomize-controller will generate a
+<code>kustomization.yaml</code> including all the resources found with <code>./deploy/prod/**/*.yaml</code>.</p>
+<p>The kustomize-controller creates <code>kustomization.yaml</code> files similar to:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ./deploy/prod <span class="o">&amp;&amp;</span> kustomize create --autodetect --recursive
+</code></pre></div>
+<h3 id="what-is-the-behavior-of-kustomize-used-by-flux">What is the behavior of Kustomize used by Flux<a class="headerlink" href="#what-is-the-behavior-of-kustomize-used-by-flux" title="Permanent link">&para;</a></h3>
+<p>We referred to the Kustomization CLI flags here, so that you can replicate the same behavior using the CLI. The behavior of Kustomize used by the controller is currently configured as following:</p>
+<ul>
+<li><code>--allow_id_changes</code> is set to false, so it does not change any resource IDs.</li>
+<li><code>--enable_kyaml</code> is disabled by default, so it currently used <code>k8sdeps</code> to process YAMLs.</li>
+<li><code>--enable_alpha_plugins</code> is disabled by default, so it uses only the built-in plugins.</li>
+<li><code>--load_restrictor</code> is set to <code>LoadRestrictionsNone</code>, so it allows loading files outside the dir containing <code>kustomization.yaml</code>.</li>
+<li><code>--reorder</code> resources is done in the <code>legacy</code> mode, so the output will have namespaces and cluster roles/role bindings first, CRDs before CRs, and webhooks last.</li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title"><code>kustomization.yaml</code> validation</p>
+<p>To validate changes before committing and/or merging, <a href="https://github.com/fluxcd/flux2-kustomize-helm-example/blob/main/scripts/validate.sh">a validation
+utility script is available</a>,
+it runs <code>kustomize</code> locally or in CI with the same set of flags as
+the controller and validates the output using <code>kubeval</code>.</p>
+</div>
+<h2 id="helm-questions">Helm questions<a class="headerlink" href="#helm-questions" title="Permanent link">&para;</a></h2>
+<h3 id="how-to-debug-not-ready-errors">How to debug "not ready" errors?<a class="headerlink" href="#how-to-debug-not-ready-errors" title="Permanent link">&para;</a></h3>
+<p>Misconfiguring the <code>HelmRelease.spec.chart</code>, like a typo in the chart name, version or chart source URL
+would result in a "HelmChart is not ready" error displayed by:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>flux get helmreleases --all-namespaces
+<span class="go">NAMESPACE   NAME    READY   MESSAGE</span>
+<span class="go">default     podinfo False   HelmChart &#39;default/default-podinfo&#39; is not ready</span>
+</code></pre></div>
+<p>In order to get to the root cause, first make sure the source e.g. the <code>HelmRepository</code>
+is configured properly and has access to the remote <code>index.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>flux get sources helm --all-namespaces 
+<span class="go">NAMESPACE   NAME    READY   MESSAGE</span>
+<span class="go">default     podinfo False   failed to fetch https://stefanprodan.github.io/podinfo2/index.yaml : 404 Not Found</span>
+</code></pre></div>
+<p>If the source is <code>Ready</code>, then the error must be caused by the chart,
+for example due to an invalid chart name or non-existing version:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>flux get sources chart --all-namespaces 
+<span class="go">NAMESPACE   NAME            READY   MESSAGE</span>
+<span class="go">default     default-podinfo False   no chart version found for podinfo-9.0.0</span>
+</code></pre></div>
+<h2 id="flux-v1-vs-v2-questions">Flux v1 vs v2 questions<a class="headerlink" href="#flux-v1-vs-v2-questions" title="Permanent link">&para;</a></h2>
+<h3 id="what-does-flux-v2-mean-for-flux">What does Flux v2 mean for Flux?<a class="headerlink" href="#what-does-flux-v2-mean-for-flux" title="Permanent link">&para;</a></h3>
+<p>Flux v1 is a monolithic do-it-all operator; Flux v2 separates the functionalities into specialized controllers, collectively called the GitOps Toolkit.</p>
+<p>You can install and operate Flux v2 simply using the <code>flux</code> command. You can easily pick and choose the functionality you need and extend it to serve your own purposes.</p>
+<p>The timeline we are looking at right now is:</p>
+<ol>
+<li>Put Flux v1 into maintenance mode (no new features being added; bugfixes and CVEs patched only).</li>
+<li>Continue work on the <a href="https://toolkit.fluxcd.io/roadmap/">Flux v2 roadmap</a>.</li>
+<li>We will provide transition guides for specific user groups, e.g. users of Flux v1 in read-only mode, or of Helm Operator v1, etc. once the functionality is integrated into Flux v2 and it's deemed "ready".</li>
+<li>Once the use-cases of Flux v1 are covered, we will continue supporting Flux v1 for 6 months. This will be the transition period before it's considered unsupported.</li>
+</ol>
+<h3 id="why-did-you-rewrite-flux">Why did you rewrite Flux?<a class="headerlink" href="#why-did-you-rewrite-flux" title="Permanent link">&para;</a></h3>
+<p>Flux v2 implements its functionality in individual controllers, which allowed us to address long-standing feature requests much more easily.</p>
+<p>By basing these controllers on modern Kubernetes tooling (<code>controller-runtime</code> libraries), they can be dynamically configured with Kubernetes custom resources either by cluster admins or by other automated tools -- and you get greatly increased observability.</p>
+<p>This gave us the opportunity to build Flux v2 with the top Flux v1 feature requests in mind:</p>
+<ul>
+<li>Supporting multiple source Git repositories</li>
+<li>Operational insight through health checks, events and alerts</li>
+<li>Multi-tenancy capabilities, like applying each source repository with its own set of permissions</li>
+</ul>
+<p>On top of that, testing the individual components and understanding the codebase becomes a lot easier.</p>
+<h3 id="what-are-significant-new-differences-between-flux-v1-and-flux-v2">What are significant new differences between Flux v1 and Flux v2?<a class="headerlink" href="#what-are-significant-new-differences-between-flux-v1-and-flux-v2" title="Permanent link">&para;</a></h3>
+<h4 id="reconciliation">Reconciliation<a class="headerlink" href="#reconciliation" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flux v1</th>
+<th>Flux v2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Limited to a single Git repository</td>
+<td>Multiple Git repositories</td>
+</tr>
+<tr>
+<td>Declarative config via arguments in the Flux deployment</td>
+<td><code>GitRepository</code> custom resource, which produces an artifact which can be reconciled by other controllers</td>
+</tr>
+<tr>
+<td>Follow <code>HEAD</code> of Git branches</td>
+<td>Supports Git branches, pinning on commits and tags, follow SemVer tag ranges</td>
+</tr>
+<tr>
+<td>Suspending of reconciliation by downscaling Flux deployment</td>
+<td>Reconciliation can be paused per resource by suspending the <code>GitRepository</code></td>
+</tr>
+<tr>
+<td>Credentials config via Arguments and/or Secret volume mounts in the Flux pod</td>
+<td>Credentials config per <code>GitRepository</code> resource: SSH private key, HTTP/S username/password/token, OpenPGP public keys</td>
+</tr>
+</tbody>
+</table>
+<h4 id="kustomize-support"><code>kustomize</code> support<a class="headerlink" href="#kustomize-support" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flux v1</th>
+<th>Flux v2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Declarative config through <code>.flux.yaml</code> files in the Git repository</td>
+<td>Declarative config through a <code>Kustomization</code> custom resource, consuming the artifact from the GitRepository</td>
+</tr>
+<tr>
+<td>Manifests are generated via shell exec and then reconciled by <code>fluxd</code></td>
+<td>Generation, server-side validation, and reconciliation is handled by a specialised <code>kustomize-controller</code></td>
+</tr>
+<tr>
+<td>Reconciliation using the service account of the Flux deployment</td>
+<td>Support for service account impersonation</td>
+</tr>
+<tr>
+<td>Garbage collection needs cluster role binding for Flux to query the Kubernetes discovery API</td>
+<td>Garbage collection needs no cluster role binding or access to Kubernetes discovery API</td>
+</tr>
+<tr>
+<td>Support for custom commands and generators executed by fluxd in a POSIX shell</td>
+<td>No support for custom commands</td>
+</tr>
+</tbody>
+</table>
+<h4 id="helm-integration">Helm integration<a class="headerlink" href="#helm-integration" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flux v1</th>
+<th>Flux v2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Declarative config in a single Helm custom resource</td>
+<td>Declarative config through <code>HelmRepository</code>, <code>GitRepository</code>, <code>Bucket</code>, <code>HelmChart</code> and <code>HelmRelease</code> custom resources</td>
+</tr>
+<tr>
+<td>Chart synchronisation embedded in the operator</td>
+<td>Extensive release configuration options, and a reconciliation interval per source</td>
+</tr>
+<tr>
+<td>Support for fixed SemVer versions from Helm repositories</td>
+<td>Support for SemVer ranges for <code>HelmChart</code> resources</td>
+</tr>
+<tr>
+<td>Git repository synchronisation on a global interval</td>
+<td>Planned support for charts from GitRepository sources</td>
+</tr>
+<tr>
+<td>Limited observability via the status object of the HelmRelease resource</td>
+<td>Better observability via the HelmRelease status object, Kubernetes events, and notifications</td>
+</tr>
+<tr>
+<td>Resource heavy, relatively slow</td>
+<td>Better performance</td>
+</tr>
+<tr>
+<td>Chart changes from Git sources are determined from Git metadata</td>
+<td>Chart changes must be accompanied by a version bump in <code>Chart.yaml</code> to produce a new artifact</td>
+</tr>
+</tbody>
+</table>
+<h4 id="notifications-webhooks-observability">Notifications, webhooks, observability<a class="headerlink" href="#notifications-webhooks-observability" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flux v1</th>
+<th>Flux v2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Emits "custom Flux events" to a webhook endpoint</td>
+<td>Emits Kubernetes events for included custom resources</td>
+</tr>
+<tr>
+<td>RPC endpoint can be configured to a 3rd party solution like FluxCloud to be forwarded as notifications to e.g. Slack</td>
+<td>Flux v2 components can be configured to POST the events to a <code>notification-controller</code> endpoint. Selective forwarding of POSTed events as notifications using <code>Provider</code> and <code>Alert</code> custom resources.</td>
+</tr>
+<tr>
+<td>Webhook receiver is a side-project</td>
+<td>Webhook receiver, handling a wide range of platforms, is included</td>
+</tr>
+<tr>
+<td>Unstructured logging</td>
+<td>Structured logging for all components</td>
+</tr>
+<tr>
+<td>Custom Prometheus metrics</td>
+<td>Generic / common <code>controller-runtime</code> Prometheus metrics</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-can-i-get-involved">How can I get involved?<a class="headerlink" href="#how-can-i-get-involved" title="Permanent link">&para;</a></h3>
+<p>There are a variety of ways and we look forward to having you on board building the future of GitOps together:</p>
+<ul>
+<li><a href="https://github.com/fluxcd/flux2/discussions">Discuss the direction</a> of Flux v2 with us</li>
+<li>Join us in #flux-dev on the <a href="https://slack.cncf.io">CNCF Slack</a></li>
+<li>Check out our <a href="https://toolkit.fluxcd.io/contributing/">contributor docs</a></li>
+<li>Take a look at the <a href="https://toolkit.fluxcd.io/roadmap/">roadmap for Flux v2</a></li>
+</ul>
+<h3 id="are-there-any-breaking-changes">Are there any breaking changes?<a class="headerlink" href="#are-there-any-breaking-changes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>In Flux v1 Kustomize support was implemented through <code>.flux.yaml</code> files in the Git repository. As indicated in the comparison table above, while this approach worked, we found it to be error-prone and hard to debug. The new <a href="https://github.com/fluxcd/kustomize-controller/blob/master/docs/spec/v1alpha1/kustomization.md">Kustomization CR</a> should make troubleshooting much easier. Unfortunately we needed to drop the support for custom commands as running arbitrary shell scripts in-cluster poses serious security concerns.</li>
+<li>Helm users: we redesigned the <code>HelmRelease</code> API and the automation will work quite differently, so upgrading to <code>HelmRelease</code> v2 will require a little work from you, but you will gain more flexibility, better observability and performance.</li>
+</ul>
+<h3 id="is-the-gitops-toolkit-related-to-the-gitops-engine">Is the GitOps Toolkit related to the GitOps Engine?<a class="headerlink" href="#is-the-gitops-toolkit-related-to-the-gitops-engine" title="Permanent link">&para;</a></h3>
+<p>In an announcement in August 2019, the expectation was set that the Flux project would integrate the GitOps Engine, then being factored out of ArgoCD. Since the result would be backward-incompatible, it would require a major version bump: Flux v2.</p>
+<p>After experimentation and considerable thought, we (the maintainers) have found a path to Flux v2 that we think better serves our vision of GitOps: the GitOps Toolkit. In consequence, we do not now plan to integrate GitOps Engine into Flux.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../contributing/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Contributing
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.18f0862e.min.js"></script>
+      <script src="../assets/javascripts/bundle.994580cf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.9c0e82ba.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

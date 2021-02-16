@@ -1,0 +1,3668 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Open and extensible continuous delivery solution for Kubernetes">
+      
+      
+      
+        <meta name="author" content="The Flux project">
+      
+      
+        <link rel="canonical" href="https://toolkit.fluxcd.io/guides/flux-v1-automation-migration/">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.8">
+    
+    
+      
+        <title>Migrate from Flux v1 image update automation - Flux | GitOps Toolkit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cb6bc1d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#2094f3">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../_static/custom.css">
+    
+    
+      
+    
+    
+
+<meta property="og:url" content="https://toolkit.fluxcd.io/guides/flux-v1-automation-migration/">
+
+<meta property="og:title" content="Migrate from Flux v1 image update automation - Flux | GitOps Toolkit">
+
+<meta property="og:description" content="Open and extensible continuous delivery solution for Kubernetes">
+<meta property="og:image" content="https://toolkit.fluxcd.io/_files/toolkit-icon.png">
+<meta property="og:image:alt" content="GitOps Toolkit">
+<meta property="og:image:type" content="image/png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@stefanprodan">
+<meta name="twitter:creator" content="@stefanprodan">
+
+<meta property="twitter:title" content="Migrate from Flux v1 image update automation - Flux | GitOps Toolkit">
+
+<meta name="twitter:description" content="Open and extensible continuous delivery solution for Kubernetes">
+<meta name="twitter:image" content="https://toolkit.fluxcd.io/_files/toolkit-icon.png">
+<meta name="twitter:image:alt" content="GitOps Toolkit">
+
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue" data-md-color-accent="indigo">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#migrating-image-update-automation-to-flux-v2" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://toolkit.fluxcd.io" title="Flux | GitOps Toolkit" class="md-header-nav__button md-logo" aria-label="Flux | GitOps Toolkit">
+      
+  <img src="../../_files/flux-icon@2x.png" alt="logo">
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            Flux | GitOps Toolkit
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              Migrate from Flux v1 image update automation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/fluxcd/flux2" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fluxcd/flux2
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://toolkit.fluxcd.io" title="Flux | GitOps Toolkit" class="md-nav__button md-logo" aria-label="Flux | GitOps Toolkit">
+      
+  <img src="../../_files/flux-icon@2x.png" alt="logo">
+
+    </a>
+    Flux | GitOps Toolkit
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/fluxcd/flux2" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fluxcd/flux2
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core-concepts/" class="md-nav__link">
+        Core Concepts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/" class="md-nav__link">
+        Get Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+      
+      <label class="md-nav__link" for="nav-4">
+        Migration
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Migration" data-md-level="1">
+        <label class="md-nav__title" for="nav-4">
+          <span class="md-nav__icon md-icon"></span>
+          Migration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../flux-v1-migration/" class="md-nav__link">
+        Migrate from Flux v1
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Migrate from Flux v1 image update automation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Migrate from Flux v1 image update automation
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-changes-between-v1-and-v2" class="md-nav__link">
+    Overview of changes between v1 and v2
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview of changes between v1 and v2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automation-is-now-controlled-by-custom-resources" class="md-nav__link">
+    Automation is now controlled by custom resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-an-image-is-more-flexible" class="md-nav__link">
+    Selecting an image is more flexible
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fields-to-update-are-explicitly-marked" class="md-nav__link">
+    Fields to update are explicitly marked
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparing-for-migration" class="md-nav__link">
+    Preparing for migration
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparing for migration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-keep-imagerepository-imagepolicy-and-imageupdateautomation-manifests" class="md-nav__link">
+    Where to keep ImageRepository, ImagePolicy and ImageUpdateAutomation manifests
+  </a>
+  
+    <nav class="md-nav" aria-label="Where to keep ImageRepository, ImagePolicy and ImageUpdateAutomation manifests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migration-on-a-branch" class="md-nav__link">
+    Migration on a branch
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-the-command-line-tool-flux" class="md-nav__link">
+    Installing the command-line tool flux
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-automation-controllers" class="md-nav__link">
+    Running the automation controllers
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the automation controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#after-flux-bootstrap" class="md-nav__link">
+    After flux bootstrap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#after-migrating-flux-v1-in-place" class="md-nav__link">
+    After migrating Flux v1 in place
+  </a>
+  
+    <nav class="md-nav" aria-label="After migrating Flux v1 in place">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#after-committing-a-flux-v2-configuration-to-git" class="md-nav__link">
+    After committing a Flux v2 configuration to Git
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controlling-automation-with-an-imageupdateautomation-object" class="md-nav__link">
+    Controlling automation with an ImageUpdateAutomation object
+  </a>
+  
+    <nav class="md-nav" aria-label="Controlling automation with an ImageUpdateAutomation object">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replacing-the-git-credentials-secret" class="md-nav__link">
+    Replacing the Git credentials secret
+  </a>
+  
+    <nav class="md-nav" aria-label="Replacing the Git credentials secret">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replacing-an-ssh-key-secret" class="md-nav__link">
+    Replacing an SSH key secret
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-a-usernamepassword-secret" class="md-nav__link">
+    Replacing a username/password secret
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-the-new-credentials" class="md-nav__link">
+    Checking the new credentials
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#making-an-automation-object" class="md-nav__link">
+    Making an automation object
+  </a>
+  
+    <nav class="md-nav" aria-label="Making an automation object">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commit-and-check-that-the-automation-object-works" class="md-nav__link">
+    Commit and check that the automation object works
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrating-each-manifest-to-flux-v2" class="md-nav__link">
+    Migrating each manifest to Flux v2
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrating each manifest to Flux v2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-migrate-annotations-to-image-policies" class="md-nav__link">
+    How to migrate annotations to image policies
+  </a>
+  
+    <nav class="md-nav" aria-label="How to migrate annotations to image policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-image-registry-credentials-for-scanning" class="md-nav__link">
+    Using image registry credentials for scanning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#committing-and-checking-the-imagerepository" class="md-nav__link">
+    Committing and checking the ImageRepository
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-automation-annotations" class="md-nav__link">
+    Replacing automation annotations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-sortable-image-tags" class="md-nav__link">
+    How to use sortable image tags
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use sortable image tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-the-tags-in-an-imagepolicy" class="md-nav__link">
+    Filtering the tags in an ImagePolicy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-semver-image-tags" class="md-nav__link">
+    How to use SemVer image tags
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use SemVer image tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#an-imagepolicy-for-the-example" class="md-nav__link">
+    An ImagePolicy for the example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-that-the-imagepolicy-works" class="md-nav__link">
+    Checking that the ImagePolicy works
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-mark-up-files-for-update" class="md-nav__link">
+    How to mark up files for update
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#committing-the-marker-change-and-checking-that-automation-works" class="md-nav__link">
+    Committing the marker change and checking that automation works
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helm-operator-migration/" class="md-nav__link">
+        Migrate from the Helm Operator
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+      
+      <label class="md-nav__link" for="nav-5">
+        Guides
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../helmreleases/" class="md-nav__link">
+        Manage Helm Releases
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../notifications/" class="md-nav__link">
+        Setup Notifications
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../webhook-receivers/" class="md-nav__link">
+        Setup Webhook Receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring/" class="md-nav__link">
+        Monitoring with Prometheus
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sealed-secrets/" class="md-nav__link">
+        Sealed Secrets
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mozilla-sops/" class="md-nav__link">
+        Mozilla SOPS
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../image-update/" class="md-nav__link">
+        Automate image updates to Git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sortable-image-tags/" class="md-nav__link">
+        Sortable image tags to use with automation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6" >
+      
+      <label class="md-nav__link" for="nav-6">
+        Toolkit Components
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Toolkit Components" data-md-level="1">
+        <label class="md-nav__title" for="nav-6">
+          <span class="md-nav__icon md-icon"></span>
+          Toolkit Components
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-2" type="checkbox" id="nav-6-2" >
+      
+      <label class="md-nav__link" for="nav-6-2">
+        Source Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Source Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-2">
+          <span class="md-nav__icon md-icon"></span>
+          Source Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/gitrepositories/" class="md-nav__link">
+        GitRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/helmrepositories/" class="md-nav__link">
+        HelmRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/helmcharts/" class="md-nav__link">
+        HelmChart CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/buckets/" class="md-nav__link">
+        Bucket CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/api/" class="md-nav__link">
+        Source API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-3" type="checkbox" id="nav-6-3" >
+      
+      <label class="md-nav__link" for="nav-6-3">
+        Kustomize Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Kustomize Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-3">
+          <span class="md-nav__icon md-icon"></span>
+          Kustomize Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/kustomize/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/kustomize/kustomization/" class="md-nav__link">
+        Kustomization CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/kustomize/api/" class="md-nav__link">
+        Kustomize API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-4" type="checkbox" id="nav-6-4" >
+      
+      <label class="md-nav__link" for="nav-6-4">
+        Helm Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Helm Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-4">
+          <span class="md-nav__icon md-icon"></span>
+          Helm Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/helm/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/helm/helmreleases/" class="md-nav__link">
+        HelmRelease CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/helm/api/" class="md-nav__link">
+        Helm API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-5" type="checkbox" id="nav-6-5" >
+      
+      <label class="md-nav__link" for="nav-6-5">
+        Notification Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Notification Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-5">
+          <span class="md-nav__icon md-icon"></span>
+          Notification Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/event/" class="md-nav__link">
+        Event
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/provider/" class="md-nav__link">
+        Provider CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/alert/" class="md-nav__link">
+        Alert CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/receiver/" class="md-nav__link">
+        Receiver CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/api/" class="md-nav__link">
+        Notification API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-6" type="checkbox" id="nav-6-6" >
+      
+      <label class="md-nav__link" for="nav-6-6">
+        Image Automation Controllers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Image Automation Controllers" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-6">
+          <span class="md-nav__icon md-icon"></span>
+          Image Automation Controllers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/imagerepositories/" class="md-nav__link">
+        ImageRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/imagepolicies/" class="md-nav__link">
+        ImagePolicy CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/imageupdateautomations/" class="md-nav__link">
+        ImageUpdateAutomation CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/automation-api/" class="md-nav__link">
+        Automation API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" >
+      
+      <label class="md-nav__link" for="nav-7">
+        Flux CLI
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Flux CLI" data-md-level="1">
+        <label class="md-nav__title" for="nav-7">
+          <span class="md-nav__icon md-icon"></span>
+          Flux CLI
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_bootstrap/" class="md-nav__link">
+        Bootstrap
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_bootstrap_github/" class="md-nav__link">
+        Bootstrap github
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_bootstrap_gitlab/" class="md-nav__link">
+        Bootstrap gitlab
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_check/" class="md-nav__link">
+        Check
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create/" class="md-nav__link">
+        Create
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_kustomization/" class="md-nav__link">
+        Create kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_helmrelease/" class="md-nav__link">
+        Create helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_source/" class="md-nav__link">
+        Create source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_source_git/" class="md-nav__link">
+        Create source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_source_helm/" class="md-nav__link">
+        Create source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_source_bucket/" class="md-nav__link">
+        Create source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_alert-provider/" class="md-nav__link">
+        Create alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_alert/" class="md-nav__link">
+        Create alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_receiver/" class="md-nav__link">
+        Create receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_image/" class="md-nav__link">
+        Create image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_image_policy/" class="md-nav__link">
+        Create image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_image_repository/" class="md-nav__link">
+        Create image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_image_update/" class="md-nav__link">
+        Create image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_tenant/" class="md-nav__link">
+        Create tenant
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_secret/" class="md-nav__link">
+        Create secret
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_secret_git/" class="md-nav__link">
+        Create secret git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_secret_helm/" class="md-nav__link">
+        Create secret helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_secret_tls/" class="md-nav__link">
+        Create secret tls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete/" class="md-nav__link">
+        Delete
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_kustomization/" class="md-nav__link">
+        Delete kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_helmrelease/" class="md-nav__link">
+        Delete helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_source/" class="md-nav__link">
+        Delete source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_source_git/" class="md-nav__link">
+        Delete source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_source_helm/" class="md-nav__link">
+        Delete source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_source_bucket/" class="md-nav__link">
+        Delete source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_image/" class="md-nav__link">
+        Delete image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_image_policy/" class="md-nav__link">
+        Delete image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_image_repository/" class="md-nav__link">
+        Delete image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_image_update/" class="md-nav__link">
+        Delete image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export/" class="md-nav__link">
+        Export
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_kustomization/" class="md-nav__link">
+        Export kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_helmrelease/" class="md-nav__link">
+        Export helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_source/" class="md-nav__link">
+        Export source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_source_git/" class="md-nav__link">
+        Export source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_source_helm/" class="md-nav__link">
+        Export source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_source_bucket/" class="md-nav__link">
+        Export source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_alert-provider/" class="md-nav__link">
+        Export alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_alert/" class="md-nav__link">
+        Export alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_receiver/" class="md-nav__link">
+        Export receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_image/" class="md-nav__link">
+        Export image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_image_policy/" class="md-nav__link">
+        Export image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_image_repository/" class="md-nav__link">
+        Export image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_image_update/" class="md-nav__link">
+        Export image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get/" class="md-nav__link">
+        Get
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_kustomizations/" class="md-nav__link">
+        Get kustomizations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_helmreleases/" class="md-nav__link">
+        Get helmreleases
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources/" class="md-nav__link">
+        Get sources
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources_git/" class="md-nav__link">
+        Get sources git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources_helm/" class="md-nav__link">
+        Get sources helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources_chart/" class="md-nav__link">
+        Get sources chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources_bucket/" class="md-nav__link">
+        Get sources bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_alert-provider.md" class="md-nav__link">
+        Get alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_alerts/" class="md-nav__link">
+        Get alerts
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_alert-providers/" class="md-nav__link">
+        Get alert providers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_receivers/" class="md-nav__link">
+        Get receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_images/" class="md-nav__link">
+        Get images
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_images_policy/" class="md-nav__link">
+        Get images policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_images_repository/" class="md-nav__link">
+        Get images repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_images_update/" class="md-nav__link">
+        Get images update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_install/" class="md-nav__link">
+        Install
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume/" class="md-nav__link">
+        Resume
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_kustomization/" class="md-nav__link">
+        Resume kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_helmrelease/" class="md-nav__link">
+        Resume helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source/" class="md-nav__link">
+        Resume source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source_git/" class="md-nav__link">
+        Resume source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source_helm/" class="md-nav__link">
+        Resume source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source_chart/" class="md-nav__link">
+        Resume source chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source_bucket/" class="md-nav__link">
+        Resume source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_alert-provider.md" class="md-nav__link">
+        Resume alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_alert/" class="md-nav__link">
+        Resume alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_receiver/" class="md-nav__link">
+        Resume receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_image/" class="md-nav__link">
+        Resume image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_image_repository/" class="md-nav__link">
+        Resume image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_image_update/" class="md-nav__link">
+        Resume image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend/" class="md-nav__link">
+        Suspend
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_kustomization/" class="md-nav__link">
+        Suspend kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_helmrelease/" class="md-nav__link">
+        Suspend helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source/" class="md-nav__link">
+        Suspend source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source_git/" class="md-nav__link">
+        Suspend source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source_helm/" class="md-nav__link">
+        Suspend source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source_chart/" class="md-nav__link">
+        Suspend source chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source_bucket/" class="md-nav__link">
+        Suspend source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_alert-provider.md" class="md-nav__link">
+        Suspend alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_alert/" class="md-nav__link">
+        Suspend alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_receiver/" class="md-nav__link">
+        Suspend receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_image/" class="md-nav__link">
+        Suspend image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_image_repository/" class="md-nav__link">
+        Suspend image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_image_update/" class="md-nav__link">
+        Suspend image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile/" class="md-nav__link">
+        Reconcile
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_kustomization/" class="md-nav__link">
+        Reconcile kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_helmrelease/" class="md-nav__link">
+        Reconcile helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_source/" class="md-nav__link">
+        Reconcile source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_source_git/" class="md-nav__link">
+        Reconcile source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_source_helm/" class="md-nav__link">
+        Reconcile source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_source_bucket/" class="md-nav__link">
+        Reconcile source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_image/" class="md-nav__link">
+        Reconcile image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_image_repository/" class="md-nav__link">
+        Reconcile image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_image_update/" class="md-nav__link">
+        Reconcile image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_uninstall/" class="md-nav__link">
+        Uninstall
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" >
+      
+      <label class="md-nav__link" for="nav-8">
+        Dev Guides
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Dev Guides" data-md-level="1">
+        <label class="md-nav__title" for="nav-8">
+          <span class="md-nav__icon md-icon"></span>
+          Dev Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev-guides/source-watcher/" class="md-nav__link">
+        Watching for source changes
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev-guides/debugging/" class="md-nav__link">
+        Advanced debugging
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        Roadmap
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-changes-between-v1-and-v2" class="md-nav__link">
+    Overview of changes between v1 and v2
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview of changes between v1 and v2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automation-is-now-controlled-by-custom-resources" class="md-nav__link">
+    Automation is now controlled by custom resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-an-image-is-more-flexible" class="md-nav__link">
+    Selecting an image is more flexible
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fields-to-update-are-explicitly-marked" class="md-nav__link">
+    Fields to update are explicitly marked
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparing-for-migration" class="md-nav__link">
+    Preparing for migration
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparing for migration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-to-keep-imagerepository-imagepolicy-and-imageupdateautomation-manifests" class="md-nav__link">
+    Where to keep ImageRepository, ImagePolicy and ImageUpdateAutomation manifests
+  </a>
+  
+    <nav class="md-nav" aria-label="Where to keep ImageRepository, ImagePolicy and ImageUpdateAutomation manifests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migration-on-a-branch" class="md-nav__link">
+    Migration on a branch
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-the-command-line-tool-flux" class="md-nav__link">
+    Installing the command-line tool flux
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-automation-controllers" class="md-nav__link">
+    Running the automation controllers
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the automation controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#after-flux-bootstrap" class="md-nav__link">
+    After flux bootstrap
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#after-migrating-flux-v1-in-place" class="md-nav__link">
+    After migrating Flux v1 in place
+  </a>
+  
+    <nav class="md-nav" aria-label="After migrating Flux v1 in place">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#after-committing-a-flux-v2-configuration-to-git" class="md-nav__link">
+    After committing a Flux v2 configuration to Git
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controlling-automation-with-an-imageupdateautomation-object" class="md-nav__link">
+    Controlling automation with an ImageUpdateAutomation object
+  </a>
+  
+    <nav class="md-nav" aria-label="Controlling automation with an ImageUpdateAutomation object">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replacing-the-git-credentials-secret" class="md-nav__link">
+    Replacing the Git credentials secret
+  </a>
+  
+    <nav class="md-nav" aria-label="Replacing the Git credentials secret">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replacing-an-ssh-key-secret" class="md-nav__link">
+    Replacing an SSH key secret
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-a-usernamepassword-secret" class="md-nav__link">
+    Replacing a username/password secret
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-the-new-credentials" class="md-nav__link">
+    Checking the new credentials
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#making-an-automation-object" class="md-nav__link">
+    Making an automation object
+  </a>
+  
+    <nav class="md-nav" aria-label="Making an automation object">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commit-and-check-that-the-automation-object-works" class="md-nav__link">
+    Commit and check that the automation object works
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrating-each-manifest-to-flux-v2" class="md-nav__link">
+    Migrating each manifest to Flux v2
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrating each manifest to Flux v2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-migrate-annotations-to-image-policies" class="md-nav__link">
+    How to migrate annotations to image policies
+  </a>
+  
+    <nav class="md-nav" aria-label="How to migrate annotations to image policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-image-registry-credentials-for-scanning" class="md-nav__link">
+    Using image registry credentials for scanning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#committing-and-checking-the-imagerepository" class="md-nav__link">
+    Committing and checking the ImageRepository
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-automation-annotations" class="md-nav__link">
+    Replacing automation annotations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-sortable-image-tags" class="md-nav__link">
+    How to use sortable image tags
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use sortable image tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-the-tags-in-an-imagepolicy" class="md-nav__link">
+    Filtering the tags in an ImagePolicy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-semver-image-tags" class="md-nav__link">
+    How to use SemVer image tags
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use SemVer image tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#an-imagepolicy-for-the-example" class="md-nav__link">
+    An ImagePolicy for the example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-that-the-imagepolicy-works" class="md-nav__link">
+    Checking that the ImagePolicy works
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-mark-up-files-for-update" class="md-nav__link">
+    How to mark up files for update
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#committing-the-marker-change-and-checking-that-automation-works" class="md-nav__link">
+    Committing the marker change and checking that automation works
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <!-- -*- fill-column: 100 -*- -->
+<h1 id="migrating-image-update-automation-to-flux-v2">Migrating image update automation to Flux v2<a class="headerlink" href="#migrating-image-update-automation-to-flux-v2" title="Permanent link">&para;</a></h1>
+<p>"Image Update Automation" is a process in which Flux makes commits to your Git repository when it
+detects that there is a new image to be used in a workload (e.g., a Deployment). In Flux v2 this
+works quite differently to how it worked in Flux v1. This guide explains the differences and how to
+port your cluster configuration from v1 to v2. There is also a <a href="https://toolkit.fluxcd.io/guides/image-update/">tutorial for using image update
+automation with a new cluster</a>.</p>
+<h2 id="overview-of-changes-between-v1-and-v2">Overview of changes between v1 and v2<a class="headerlink" href="#overview-of-changes-between-v1-and-v2" title="Permanent link">&para;</a></h2>
+<p>In Flux v1, image update automation (from here, just "automation") was built into the Flux daemon,
+which scanned everything it found in the cluster and updated the Git repository it was syncing.</p>
+<p>In Flux v2,</p>
+<ul>
+<li>automation is controlled with custom resources, not annotations</li>
+<li>ordering images by build time is not supported (there is <a href="#how-to-migrate-annotations-to-image-policies">a section
+   below</a> explaining what to do instead)</li>
+<li>the fields to update in files are marked explicitly, rather than inferred from annotations.</li>
+</ul>
+<h4 id="automation-is-now-controlled-by-custom-resources">Automation is now controlled by custom resources<a class="headerlink" href="#automation-is-now-controlled-by-custom-resources" title="Permanent link">&para;</a></h4>
+<p>Flux v2 breaks down the functions in Flux v1's daemon into controllers, with each having a specific
+area of concern. Automation is now done by two controllers: one which scans image repositories to
+find the latest images, and one which uses that information to commit changes to git
+repositories. These are in turn separate to the syncing controllers.</p>
+<p>This means that automation in Flux v2 is governed by custom resources. In Flux v1 the daemon scanned
+everything, and looked at annotations on the resources to determine what to update. Automation in v2
+is more explicit than in v1 -- you have to mention exactly which images you want to be scanned, and
+which fields you want to be updated.</p>
+<p>A consequence of using custom resources is that with Flux v2 you can have an arbitrary number of
+automations, targeting different Git repositories if you wish, and updating different sets of
+images. If you run a multitenant cluster, the tenants can define automation in their own namespaces,
+for their own Git repositories.</p>
+<h4 id="selecting-an-image-is-more-flexible">Selecting an image is more flexible<a class="headerlink" href="#selecting-an-image-is-more-flexible" title="Permanent link">&para;</a></h4>
+<p>The ways in which you choose to select an image have changed. In Flux v1, you generally supply a
+filter pattern, and the latest image is the image with the most recent build time out of those
+filtered. In Flux v2, you choose an ordering, and separately specify a filter for the tags to
+consider. These are dealt with in detail below.</p>
+<p>Selecting an image by build time is no longer supported. This is the implicit default in Flux v1. In
+Flux v2, you will need to tag images so that they sort in the order you would like -- <a href="#how-to-use-sortable-image-tags">see
+below</a> for how to do this conveniently.</p>
+<h4 id="fields-to-update-are-explicitly-marked">Fields to update are explicitly marked<a class="headerlink" href="#fields-to-update-are-explicitly-marked" title="Permanent link">&para;</a></h4>
+<p>Lastly, in Flux v2 the fields to update in files are marked explicitly. In Flux v1 they are inferred
+from the type of the resource, along with the annotations given. The approach in Flux v1 was limited
+to the types that had been programmed in, whereas Flux v2 can update any Kubernetes object (and some
+files that aren't Kubernetes objects, like <code>kustomization.yaml</code>).</p>
+<h2 id="preparing-for-migration">Preparing for migration<a class="headerlink" href="#preparing-for-migration" title="Permanent link">&para;</a></h2>
+<p>It is best to complete migration of your system to <em>Flux v2 syncing</em> first, using the <a href="https://toolkit.fluxcd.io/guides/flux-v1-migration/">Flux v1
+migration guide</a>. This will remove Flux v1 from the system, along with its image
+automation. You can then reintroduce automation with Flux v2 by following the instructions in this
+guide.</p>
+<p>It is safe to leave the annotations for Flux v1 in files while you reintroduce automation, because
+Flux v2 will ignore them.</p>
+<p>To migrate to Flux v2 automation, you will need to do three things:</p>
+<ul>
+<li>make sure you are running the automation controllers; then,</li>
+<li>declare the automation with an <code>ImageUpdateAutomation</code> object; and,</li>
+<li>migrate each manifest by translate Flux v1 annotations to Flux v2 <code>ImageRepository</code> and
+   <code>ImagePolicy</code> objects, and putting update markers in the manifest file.</li>
+</ul>
+<h3 id="where-to-keep-imagerepository-imagepolicy-and-imageupdateautomation-manifests">Where to keep <code>ImageRepository</code>, <code>ImagePolicy</code> and <code>ImageUpdateAutomation</code> manifests<a class="headerlink" href="#where-to-keep-imagerepository-imagepolicy-and-imageupdateautomation-manifests" title="Permanent link">&para;</a></h3>
+<p>This guide assumes you want to manage automation itself via Flux. In the following sections,
+manifests for the objects controlling automation are saved in files, committed to Git, and applied
+in the cluster with Flux.</p>
+<p>A Flux v2 installation will typically have a Git repository structured like this:</p>
+<div class="highlight"><pre><span></span><code>&lt;...&gt;/flux-system/
+        gotk-components.yaml
+        gotk-sync.yaml
+&lt;...&gt;/app/
+        # deployments etc.
+</code></pre></div>
+<p>The <code>&lt;...&gt;</code> is the path to a particular cluster's definitions -- this may be simply <code>.</code>, or
+something like <code>clusters/my-cluster</code>. To get the files in the right place, set a variable for this
+path:</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nv">CLUSTER_PATH</span><span class="o">=</span>&lt;...&gt; <span class="c1"># e.g., &quot;.&quot; or &quot;clusters/my-cluster&quot;, or ...</span>
+$ <span class="nv">AUTO_PATH</span><span class="o">=</span><span class="nv">$CLUSTER_PATH</span>/automation
+$ mkdir ./<span class="nv">$AUTO_PATH</span>
+</code></pre></div>
+<p>The file <code>$CLUSTER_PATH/flux-system/gotk-components.yaml</code> has definitions of all the Flux v2
+controllers and custom resource definitions. The file <code>gotk-sync.yaml</code> defines a <code>GitRepository</code> and
+a <code>Kustomization</code> which will sync manifests under <code>$CLUSTER_PATH/</code>.</p>
+<p>To these will be added definitions for automation objects. This guide puts manifest files for
+automation in <code>$CLUSTER_PATH/automation/</code>, but there is no particular structure required
+by Flux. The automation objects do not have to be in the same namespace as the objects to be
+updated.</p>
+<h4 id="migration-on-a-branch">Migration on a branch<a class="headerlink" href="#migration-on-a-branch" title="Permanent link">&para;</a></h4>
+<p>This guide assumes you will commit changes to the branch that is synced by Flux, as this is the
+simplest way to understand.</p>
+<p>It may be less disruptive to put migration changes on a branch, then merging when you have completed
+the migration. You would need to either change the <code>GitRepository</code> to point at the migration branch,
+or have separate <code>GitRepository</code> and <code>Kustomization</code> objects for the migrated parts of your Git
+repository. The main thing to avoid is syncing the same objects in two different places; e.g., avoid
+having Kustomizations that sync both the unmigrated and migrated application configuration.</p>
+<h3 id="installing-the-command-line-tool-flux">Installing the command-line tool <code>flux</code><a class="headerlink" href="#installing-the-command-line-tool-flux" title="Permanent link">&para;</a></h3>
+<p>The command-line tool <code>flux</code> will be used below; see <a href="https://toolkit.fluxcd.io/get-started/#install-the-flux-cli">these instructions</a> for how to
+install it.</p>
+<h2 id="running-the-automation-controllers">Running the automation controllers<a class="headerlink" href="#running-the-automation-controllers" title="Permanent link">&para;</a></h2>
+<p>The first thing to do is to deploy the automation controllers to your cluster. The best way to
+proceed will depend on the approach you took when following the <a href="https://toolkit.fluxcd.io/guides/flux-v1-migration/">Flux read-only migration
+guide</a>.</p>
+<ul>
+<li>If you used <code>flux bootstrap</code> to create a new Git repository, then ported your cluster
+   configuration to that repository, use <a href="#after-flux-bootstrap">After <code>flux bootstrap</code></a>;</li>
+<li>If you used <code>flux install</code> to install the controllers directly, use <a href="#after-migrating-flux-v1-in-place">After migrating Flux v1 in
+   place</a>;</li>
+<li>If you used <code>flux install</code> and exported the configuration to a file, use <a href="#after-committing-a-flux-v2-configuration-to-git">After committing Flux
+   v2 configuration to Git</a>.</li>
+</ul>
+<h3 id="after-flux-bootstrap">After <code>flux bootstrap</code><a class="headerlink" href="#after-flux-bootstrap" title="Permanent link">&para;</a></h3>
+<p>When starting from scratch, you are likely to have used <code>flux bootstrap</code>. Rerun the command, and
+include the image automation controllers in your starting configuration with the flag
+<code>--components-extra</code>, <a href="https://toolkit.fluxcd.io/guides/installation/#bootstrap">as shown in the installation guide</a>.</p>
+<p>This will commit changes to your Git repository and sync them in the cluster.</p>
+<div class="highlight"><pre><span></span><code>flux check --components-extra<span class="o">=</span>image-reflector-controller,image-automation-controller
+</code></pre></div>
+<p>Now jump to the section <a href="#migrating-each-manifest-to-flux-v2">Migrating each manifest to Flux v2</a>.</p>
+<h3 id="after-migrating-flux-v1-in-place">After migrating Flux v1 in place<a class="headerlink" href="#after-migrating-flux-v1-in-place" title="Permanent link">&para;</a></h3>
+<p>If you followed the <a href="https://toolkit.fluxcd.io/guides/flux-v1-migration/">Flux v1 migration guide</a>, you will already be running some
+Flux v2 controllers. The automation controllers are currently considered an optional extra to those,
+but are installed and run in much the same way. You may or may not have committed the Flux v2
+configuration to your Git repository. If you did, go to the section <a href="#after-committing-flux-v2-configuration-to-git">After committing Flux v2
+configuration to Git</a>.</p>
+<p>If <em>not</em>, you will be installing directly to the cluster:</p>
+<div class="highlight"><pre><span></span><code>$ flux install --components-extra<span class="o">=</span>image-reflector-controller,image-automation-controller
+</code></pre></div>
+<p>It is safe to repeat the installation command, or to run it after using <code>flux bootstrap</code>, so long as
+you repeat any arguments you supplied the first time.</p>
+<p>Now jump ahead to <a href="#migrating-each-manifest-to-flux-v2">Migrating each manifest to Flux v2</a>.</p>
+<h4 id="after-committing-a-flux-v2-configuration-to-git">After committing a Flux v2 configuration to Git<a class="headerlink" href="#after-committing-a-flux-v2-configuration-to-git" title="Permanent link">&para;</a></h4>
+<p>If you added the Flux v2 configuration to your git repository, assuming it's in the file
+<code>$CLUSTER_PATH/flux-system/gotk-components.yaml</code> as used in the guide, use <code>flux install</code> and write
+it back to that file:</p>
+<div class="highlight"><pre><span></span><code>$ flux install <span class="se">\</span>
+    --components-extra<span class="o">=</span>image-reflector-controller,image-automation-controller <span class="se">\</span>
+    --export &gt; <span class="s2">&quot;</span><span class="nv">$CLUSTER_PATH</span><span class="s2">/flux-system/gotk-components.yaml&quot;</span>
+</code></pre></div>
+<p>Commit changes to the <code>$CLUSTER_PATH/flux-system/gotk-components.yaml</code> file and sync the cluster:</p>
+<div class="highlight"><pre><span></span><code>$ git add <span class="nv">$CLUSTER_PATH</span>/flux-system/gotk-components.yaml
+$ git commit -s -m <span class="s2">&quot;Add image automation controllers to Flux config&quot;</span>
+$ git push
+$ flux reconcile kustomization --with-source flux-system
+</code></pre></div>
+<h2 id="controlling-automation-with-an-imageupdateautomation-object">Controlling automation with an <code>ImageUpdateAutomation</code> object<a class="headerlink" href="#controlling-automation-with-an-imageupdateautomation-object" title="Permanent link">&para;</a></h2>
+<p>In Flux v1, automation was run by default. With Flux v2, you have to explicitly tell the controller
+which Git repository to update and how to do so. These are defined in an <code>ImageUpdateAutomation</code>
+object; but first, you need a <code>GitRepository</code> with write access, for the automation to use.</p>
+<p>If you followed the <a href="https://toolkit.fluxcd.io/guides/flux-v1-migration/">Flux v1 read-only migration guide</a>, you will have a
+<code>GitRepository</code> defined in the namespace <code>flux-system</code>, for syncing to use. This <code>GitRepository</code>
+will have <em>read</em> access to the Git repository by default, and automation needs <em>write</em> access to
+push commits.</p>
+<p>To give it write access, you can replace the secret it refers to. How to do this will depend on what
+kind of authentication you used to install Flux v2.</p>
+<h3 id="replacing-the-git-credentials-secret">Replacing the Git credentials secret<a class="headerlink" href="#replacing-the-git-credentials-secret" title="Permanent link">&para;</a></h3>
+<p>The secret with Git credentials will be named in the <code>.spec.secretRef.name</code> field of the
+<code>GitRepository</code> object. Say your <code>GitRepository</code> is in the <em>namespace</em> <code>flux-system</code> and <em>named</em>
+<code>flux-system</code> (these are the defaults if you used <code>flux bootstrap</code>); you can retrieve the secret
+name and Git URL with:</p>
+<div class="highlight"><pre><span></span><code>$ <span class="nv">FLUX_NS</span><span class="o">=</span>flux-system
+$ <span class="nv">GIT_NAME</span><span class="o">=</span>flux-system
+$ <span class="nv">SECRET_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl -n <span class="nv">$FLUX_NS</span> get gitrepository <span class="nv">$GIT_NAME</span> -o <span class="nv">jsonpath</span><span class="o">={</span>.spec.secretRef.name<span class="o">}</span><span class="k">)</span>
+$ <span class="nv">GIT_URL</span><span class="o">=</span><span class="k">$(</span>kubectl -n <span class="nv">$FLUX_NS</span> get gitrepository <span class="nv">$GIT_NAME</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.url}&#39;</span><span class="k">)</span>
+$ <span class="nb">echo</span> <span class="nv">$SECRET_NAME</span> <span class="nv">$GIT_URL</span> <span class="c1"># make sure they have values</span>
+</code></pre></div>
+<p>If you're not sure which kind of credentials you're using, look at the secret:</p>
+<div class="highlight"><pre><span></span><code>$ kubectl -n <span class="nv">$FLUX_NS</span> describe secret <span class="nv">$SECRET_NAME</span>
+</code></pre></div>
+<p>An entry at <code>.data.identity</code> indicates that you are using an SSH key (the <a href="#replacing-an-ssh-key-secret">first
+section</a> below); an entry at <code>.data.username</code> indicates you are using
+a username and password or token (the <a href="#replacing-a-usernamepassword-secret">second section</a>
+below).</p>
+<h4 id="replacing-an-ssh-key-secret">Replacing an SSH key secret<a class="headerlink" href="#replacing-an-ssh-key-secret" title="Permanent link">&para;</a></h4>
+<p>When using an SSH (deploy) key, create a new key:</p>
+<div class="highlight"><pre><span></span><code>$ flux create secret git -n <span class="nv">$FLUX_NS</span> <span class="nv">$SECRET_NAME</span> --url<span class="o">=</span><span class="nv">$GIT_URL</span>
+</code></pre></div>
+<p>You will need to copy the public key that's printed out, and install that as a deploy key for your
+Git repo <strong>making sure to check the 'All write access' box</strong> (or otherwise give the key write
+permissions). Remove the old deploy key.</p>
+<h4 id="replacing-a-usernamepassword-secret">Replacing a username/password secret<a class="headerlink" href="#replacing-a-usernamepassword-secret" title="Permanent link">&para;</a></h4>
+<p>When you're using a username and password to authenticate, you may be able to change the permissions
+associated with that account.</p>
+<p>If not, you will need to create a new access token (e.g., <a href="https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token">"Personal Access Token"</a> in
+GitHub). In this case, once you have the new token you can replace the secret with the following:</p>
+<div class="highlight"><pre><span></span><code>$ flux create secret git -n <span class="nv">$FLUX_NS</span> <span class="nv">$SECRET_NAME</span> <span class="se">\</span>
+    --username &lt;username&gt; --password &lt;token&gt; --url <span class="nv">$GIT_URL</span>
+</code></pre></div>
+<h4 id="checking-the-new-credentials">Checking the new credentials<a class="headerlink" href="#checking-the-new-credentials" title="Permanent link">&para;</a></h4>
+<p>To check if your replaced credentials still work, try syncing the <code>GitRepository</code> object:</p>
+<div class="highlight"><pre><span></span><code>$ flux reconcile <span class="nb">source</span> git -n <span class="nv">$FLUX_NS</span> <span class="nv">$GIT_NAME</span>
+► annotating GitRepository flux-system <span class="k">in</span> flux-system namespace
+✔ GitRepository annotated
+◎ waiting <span class="k">for</span> GitRepository reconciliation
+✔ GitRepository reconciliation completed
+✔ fetched revision main/d537304e8f5f41f1584ca1e807df5b5752b2577e
+</code></pre></div>
+<p>When this is successful, it tells you the new credentials have at least read access.</p>
+<h3 id="making-an-automation-object">Making an automation object<a class="headerlink" href="#making-an-automation-object" title="Permanent link">&para;</a></h3>
+<p>To set automation running, you create an <a href="https://toolkit.fluxcd.io/components/image/imageupdateautomations/"><code>ImageUpdateAutomation</code></a> object. Each object
+will update a Git repository, according to the image policies in the namespace.</p>
+<p>Here is an <code>ImageUpdateAutomation</code> manifest for the example (note: you will have to supply your own
+value for at least the host part of the email address):</p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">$</span> <span class="c1"># the environment variables $AUTO_PATH and $GIT_NAME are set above</span>
+<span class="l l-Scalar l-Scalar-Plain">$ FLUXBOT_EMAIL=fluxbot@example.com</span> <span class="c1"># supply your own host or address here</span>
+<span class="l l-Scalar l-Scalar-Plain">$ flux create image update my-app-auto \</span>
+    <span class="l l-Scalar l-Scalar-Plain">--author-name FluxBot --author-email &quot;$FLUXBOT_EMAIL&quot; \</span>
+    <span class="l l-Scalar l-Scalar-Plain">--git-repo-ref $GIT_NAME --branch main \</span>
+    <span class="l l-Scalar l-Scalar-Plain">--interval 5m \</span>
+    <span class="l l-Scalar l-Scalar-Plain">--export &gt; ./$AUTO_PATH/my-app-auto.yaml</span>
+<span class="l l-Scalar l-Scalar-Plain">$ cat my-app-auto.yaml</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image.toolkit.fluxcd.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ImageUpdateAutomation</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app-auto</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">checkout</span><span class="p">:</span>
+    <span class="nt">branch</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">main</span>
+    <span class="nt">gitRepositoryRef</span><span class="p">:</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+  <span class="nt">commit</span><span class="p">:</span>
+    <span class="nt">authorEmail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fluxbot@example.com</span>
+    <span class="nt">authorName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FluxBot</span>
+  <span class="nt">interval</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5m0s</span>
+</code></pre></div>
+<h4 id="commit-and-check-that-the-automation-object-works">Commit and check that the automation object works<a class="headerlink" href="#commit-and-check-that-the-automation-object-works" title="Permanent link">&para;</a></h4>
+<p>Commit the manifeat file and push:</p>
+<div class="highlight"><pre><span></span><code>$ git add ./<span class="nv">$AUTO_PATH</span>/my-app-auto.yaml
+$ git commit -s -m <span class="s2">&quot;Add image update automation&quot;</span>
+$ git push
+<span class="c1"># ...</span>
+</code></pre></div>
+<p>Then sync and check the object status:</p>
+<div class="highlight"><pre><span></span><code>$ flux reconcile kustomization --with-source flux-system
+► annotating GitRepository flux-system <span class="k">in</span> flux-system namespace
+✔ GitRepository annotated
+◎ waiting <span class="k">for</span> GitRepository reconciliation
+✔ GitRepository reconciliation completed
+✔ fetched revision main/401dd3b550f82581c7d12bb79ade389089c6422f
+► annotating Kustomization flux-system <span class="k">in</span> flux-system namespace
+✔ Kustomization annotated
+◎ waiting <span class="k">for</span> Kustomization reconciliation
+✔ Kustomization reconciliation completed
+✔ reconciled revision main/401dd3b550f82581c7d12bb79ade389089c6422f
+$ flux get image update
+NAME            READY   MESSAGE         LAST RUN                SUSPENDED
+my-app-auto     True    no updates made <span class="m">2021</span>-02-08T14:53:43Z    False
+</code></pre></div>
+<p>Read on to the next section to see how to change each manifest file to work with Flux v2.</p>
+<h2 id="migrating-each-manifest-to-flux-v2">Migrating each manifest to Flux v2<a class="headerlink" href="#migrating-each-manifest-to-flux-v2" title="Permanent link">&para;</a></h2>
+<p>In Flux v1, the annotation</p>
+<div class="codehilite"><pre><span></span><code>fluxcd.io/automated: &quot;true&quot;
+</code></pre></div>
+
+<p>switches automation on for a manifest (a description of a Kubernetes object). For each manifest that
+has that annotation, you will need to create custom resources to scan for the latest image, and to
+replace the annotations with field markers.</p>
+<p>The following sections explain these steps, using this example Deployment manifest which is
+initially annotated to work with Flux v1:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+  <span class="nt">annotations</span><span class="p">:</span>
+    <span class="nt">fluxcd.io/automated</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
+    <span class="nt">fluxcd.io/tag.app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semver:^5.0</span>
+  <span class="nt">selector</span><span class="p">:</span>
+    <span class="nt">matchLabels</span><span class="p">:</span>
+      <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">template</span><span class="p">:</span>
+    <span class="nt">metadata</span><span class="p">:</span>
+      <span class="nt">labels</span><span class="p">:</span>
+        <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">spec</span><span class="p">:</span>
+      <span class="nt">containers</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app</span>
+        <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ghcr.io/stefanprodan/podinfo:5.0.0</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>A YAML file may have more than one manifest in it, separated with
+<code>---</code>. Be careful to account for each manifest in a file.</p>
+</div>
+<p>You may wish to try migrating the automation of just one file or manifest and follow it through to
+the end of the guide, before returning here to do the remainder.</p>
+<h3 id="how-to-migrate-annotations-to-image-policies">How to migrate annotations to image policies<a class="headerlink" href="#how-to-migrate-annotations-to-image-policies" title="Permanent link">&para;</a></h3>
+<p>For each image repository that is the subject of automation you will need to create an
+<code>ImageRepository</code> object, so that the image repository is scanned for tags. The image repository in
+the example deployment is <code>ghcr.io/stefanprodan/podinfo</code>, which is the image reference minus its
+tag:</p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">$ cat $CLUSTER_PATH/app/my-app.yaml</span>
+<span class="l l-Scalar l-Scalar-Plain">apiVersion</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+  <span class="nt">annotations</span><span class="p">:</span>
+    <span class="nt">fluxcd.io/automated</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
+    <span class="nt">fluxcd.io/tag.app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semver:^5.0</span>
+  <span class="nt">selector</span><span class="p">:</span>
+    <span class="nt">matchLabels</span><span class="p">:</span>
+      <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">template</span><span class="p">:</span>
+    <span class="nt">metadata</span><span class="p">:</span>
+      <span class="nt">labels</span><span class="p">:</span>
+        <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">spec</span><span class="p">:</span>
+      <span class="nt">containers</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app</span>
+        <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ghcr.io/stefanprodan/podinfo:5.0.0</span> <span class="c1"># &lt;-- image reference</span>
+</code></pre></div>
+<p>The command-line tool <code>flux</code> will help create a manifest for you. Note that the output is redirected
+to a file under <code>$AUTO_PATH</code>, so it can be added to the Git repository and synced to the cluster.</p>
+<div class="highlight"><pre><span></span><code>$ <span class="c1"># the environment variable $AUTO_PATH was set earlier</span>
+$ flux create image repository podinfo-image <span class="se">\</span>
+    --image ghcr.io/stefanprodan/podinfo <span class="se">\</span>
+    --interval 5m <span class="se">\</span>
+    --export &gt; ./<span class="nv">$AUTO_PATH</span>/podinfo-image.yaml
+$ cat ./<span class="nv">$AUTO_PATH</span>/podinfo-image.yaml
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImageRepository
+metadata:
+  name: podinfo-image
+  namespace: flux-system
+spec:
+  image: ghcr.io/stefanprodan/podinfo
+  interval: 5m0s
+</code></pre></div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+</div>
+<p>If you are using the same image repository in several manifests, you only need one
+  <code>ImageRepository</code> object for it.</p>
+<h5 id="using-image-registry-credentials-for-scanning">Using image registry credentials for scanning<a class="headerlink" href="#using-image-registry-credentials-for-scanning" title="Permanent link">&para;</a></h5>
+<p>When your image repositories are private, you supply Kubernetes with "image pull secrets" with
+credentials for accessing the image registry (e.g., DockerHub). The image reflector controller needs
+the same kind of credentials to scan image repositories.</p>
+<p>There are several ways that image pull secrets can be made available for the image reflector
+controller. The <a href="https://toolkit.fluxcd.io/guides/image-update/#configure-image-scanning">image update tutorial</a> describes how to create or arrange
+secrets for scanning to use. Also see later in the tutorial for <a href="https://toolkit.fluxcd.io/guides/image-update/#imagerepository-cloud-providers-authentication">instructions specific to some cloud
+platforms</a>.</p>
+<h5 id="committing-and-checking-the-imagerepository">Committing and checking the ImageRepository<a class="headerlink" href="#committing-and-checking-the-imagerepository" title="Permanent link">&para;</a></h5>
+<p>Add the <code>ImageRepository</code> manifest to the Git index and commit it:</p>
+<div class="highlight"><pre><span></span><code>$ git add ./<span class="nv">$AUTO_PATH</span>/podinfo-image.yaml
+$ git commit -s -m <span class="s2">&quot;Add image repository object for podinfo&quot;</span>
+$ git push
+<span class="c1"># ...</span>
+</code></pre></div>
+<p>Now you can sync the new commit, and check that the object is working:</p>
+<div class="highlight"><pre><span></span><code>$ flux reocncile kustomization --with-source flux-system
+► annotating GitRepository flux-system <span class="k">in</span> flux-system namespace
+✔ GitRepository annotated
+◎ waiting <span class="k">for</span> GitRepository reconciliation
+✔ GitRepository reconciliation completed
+✔ fetched revision main/fd2fe8a61d4537bcfa349e4d1dbc480ea699ba8a
+► annotating Kustomization flux-system <span class="k">in</span> flux-system namespace
+✔ Kustomization annotated
+◎ waiting <span class="k">for</span> Kustomization reconciliation
+✔ Kustomization reconciliation completed
+✔ reconciled revision main/fd2fe8a61d4537bcfa349e4d1dbc480ea699ba8a
+$ flux get image repository podinfo-image
+NAME            READY   MESSAGE                         LAST SCAN               SUSPENDED
+podinfo-image   True    successful scan, found <span class="m">16</span> tags  <span class="m">2021</span>-02-08T14:31:38Z    False
+</code></pre></div>
+<h4 id="replacing-automation-annotations">Replacing automation annotations<a class="headerlink" href="#replacing-automation-annotations" title="Permanent link">&para;</a></h4>
+<p>For each <em>field</em> that's being updated by automation, you'll need an <code>ImagePolicy</code> object to describe
+how to select an image for the field value. In the example, the field <code>.image</code> in the container
+named <code>"app"</code> is the field being updated.</p>
+<p>In Flux v1, annotations describe how to select the image to update to, using a prefix. In the
+example, the prefix is <code>semver:</code>:</p>
+<div class="highlight"><pre><span></span><code>  <span class="nt">annotations</span><span class="p">:</span>
+    <span class="nt">fluxcd.io/automated</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
+    <span class="nt">fluxcd.io/tag.app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semver:^5.0</span>
+</code></pre></div>
+<p>These are the prefixes supported in Flux v1, and what to use in Flux v2:</p>
+<table>
+<thead>
+<tr>
+<th>Flux v1 prefix</th>
+<th>Meaning</th>
+<th>Flux v2 equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>glob:</code></td>
+<td>Filter for tags matching the glob pattern, then select the newest by build time</td>
+<td><a href="#how-to-use-sortable-image-tags">Use sortable tags</a></td>
+</tr>
+<tr>
+<td><code>regex:</code></td>
+<td>Filter for tags matching the regular expression, then select the newest by build time</td>
+<td><a href="#how-to-use-sortable-image-tags">Use sortable tags</a></td>
+</tr>
+<tr>
+<td><code>semver:</code></td>
+<td>Filter for tags that represent versions, and select the highest version in the given range</td>
+<td><a href="#how-to-use-semver-image-tags">Use semver ordering</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="how-to-use-sortable-image-tags">How to use sortable image tags<a class="headerlink" href="#how-to-use-sortable-image-tags" title="Permanent link">&para;</a></h4>
+<p>To give image tags a useful ordering, you can use a timestamp or serial number as part of each
+image's tag, then sort either alphabetically or numerically.</p>
+<p>This is a change from Flux v1, in which the build time was fetched from each image's config, and
+didn't need to be included in the image tag. Therefore, this is likely to require a change to your
+build process.</p>
+<p>The guide <a href="https://toolkit.fluxcd.io/guides/sortable-image-tags/">How to make sortable image tags</a> explains how to change your build
+process to tag images with a timestamp. This will mean Flux v2 can sort the tags to find the most
+recently built image.</p>
+<h5 id="filtering-the-tags-in-an-imagepolicy">Filtering the tags in an <code>ImagePolicy</code><a class="headerlink" href="#filtering-the-tags-in-an-imagepolicy" title="Permanent link">&para;</a></h5>
+<p>The recommended format for image tags using a timestamp is:</p>
+<div class="codehilite"><pre><span></span><code>&lt;branch&gt;-&lt;sha1&gt;-&lt;timestamp&gt;
+</code></pre></div>
+
+<p>The timestamp (or serial number) is the part of the tag that you want to order on. The SHA1 is there
+so you can trace an image back to the commit from which it was built. You don't need the branch for
+sorting, but you may want to include only builds from a specific branch.</p>
+<p>Say you want to filter for only images that are from <code>main</code> branch, and pick the most recent. Your
+<code>ImagePolicy</code> would look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image.toolkit.fluxcd.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ImagePolicy</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app-policy</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">imageRepositoryRef</span><span class="p">:</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo-image</span>
+  <span class="nt">filterTags</span><span class="p">:</span>
+    <span class="nt">pattern</span><span class="p">:</span> <span class="s">&#39;^main-[a-f0-9]+-(?P&lt;ts&gt;[0-9]+)&#39;</span>
+    <span class="nt">extract</span><span class="p">:</span> <span class="s">&#39;$ts&#39;</span>
+  <span class="nt">policy</span><span class="p">:</span>
+    <span class="nt">numerical</span><span class="p">:</span>
+      <span class="nt">order</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">asc</span>
+</code></pre></div>
+<p>The <code>.spec.pattern</code> field gives a regular expression that a tag must match to be included. The
+<code>.spec.extract</code> field gives a replacement pattern that can refer back to capture groups in the
+filter pattern. The extracted values are sorted to find the selected image tag. In this case, the
+timestamp part of the tag will be extracted and sorted numerically in ascending order. See <a href="https://toolkit.fluxcd.io/components/image/imagepolicies/">the
+reference docs</a> for more examples.</p>
+<p>Once you have made sure you have image tags and an <code>ImagePolicy</code> that works, jump ahead to <a href="#checking-that-the-image-policy-works">Checking
+the ImagePolicy works</a>.</p>
+<h3 id="how-to-use-semver-image-tags">How to use SemVer image tags<a class="headerlink" href="#how-to-use-semver-image-tags" title="Permanent link">&para;</a></h3>
+<p>The other kind of sorting is by <a href="https://semver.org">SemVer</a>, picking the highest version from among those
+included by the filter. A semver range will also filter for tags that fit in the range. For example,</p>
+<div class="highlight"><pre><span></span><code>    <span class="nt">semver</span><span class="p">:</span>
+      <span class="nt">range</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">^5.0</span>
+</code></pre></div>
+<p>includes only tags that have a major version of <code>5</code>, and selects whichever is the highest.</p>
+<p>This can be combined with a regular expression pattern, to filter on other parts of the tags. For
+example, you might put a target environment as well as the version in your image tags, like
+<code>dev-v1.0.3</code>.</p>
+<p>Then you would use an <code>ImagePolicy</code> similar to this one:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image.toolkit.fluxcd.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ImagePolicy</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app-policy</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flux-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">imageRepositoryRef</span><span class="p">:</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo-image</span>
+  <span class="nt">filterTags</span><span class="p">:</span>
+    <span class="nt">pattern</span><span class="p">:</span> <span class="s">&#39;^dev-v(?P&lt;version&gt;.*)&#39;</span>
+    <span class="nt">extract</span><span class="p">:</span> <span class="s">&#39;$version&#39;</span>
+  <span class="nt">policy</span><span class="p">:</span>
+    <span class="nt">semver</span><span class="p">:</span>
+      <span class="nt">range</span><span class="p">:</span> <span class="s">&#39;^1.0&#39;</span>
+</code></pre></div>
+<p>Continue on to the next sections to see an example, and how to check that your <code>ImagePolicy</code> works.</p>
+<h4 id="an-imagepolicy-for-the-example">An <code>ImagePolicy</code> for the example<a class="headerlink" href="#an-imagepolicy-for-the-example" title="Permanent link">&para;</a></h4>
+<p>The example Deployment has annotations using <code>semver:</code> as a prefix, so the policy object also uses
+semver:</p>
+<div class="highlight"><pre><span></span><code>$ <span class="c1"># the environment variable $AUTO_PATH was set earlier</span>
+$ flux create image policy my-app-policy <span class="se">\</span>
+    --image-ref podinfo-image <span class="se">\</span>
+    --semver <span class="s1">&#39;^5.0&#39;</span> <span class="se">\</span>
+    --export &gt; ./<span class="nv">$AUTO_PATH</span>/my-app-policy.yaml
+$ cat ./<span class="nv">$AUTO_PATH</span>/my-app-policy.yaml
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImagePolicy
+metadata:
+  name: my-app-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: podinfo-image
+  policy:
+    semver:
+      range: ^5.0
+</code></pre></div>
+<h4 id="checking-that-the-imagepolicy-works">Checking that the <code>ImagePolicy</code> works<a class="headerlink" href="#checking-that-the-imagepolicy-works" title="Permanent link">&para;</a></h4>
+<p>Commit the manifest file, and push:</p>
+<div class="highlight"><pre><span></span><code>$ git add ./<span class="nv">$AUTO_PATH</span>/my-app-policy.yaml
+$ git commit -s -m <span class="s2">&quot;Add image policy for my-app&quot;</span>
+$ git push
+<span class="c1"># ...</span>
+</code></pre></div>
+<p>Then you can reconcile and check that the image policy works:</p>
+<div class="highlight"><pre><span></span><code>$ flux reconcile kustomization --with-source flux-system
+► annotating GitRepository flux-system <span class="k">in</span> flux-system namespace
+✔ GitRepository annotated
+◎ waiting <span class="k">for</span> GitRepository reconciliation
+✔ GitRepository reconciliation completed
+✔ fetched revision main/7dcf50222499be8c97e22cd37e26bbcda8f70b95
+► annotating Kustomization flux-system <span class="k">in</span> flux-system namespace
+✔ Kustomization annotated
+◎ waiting <span class="k">for</span> Kustomization reconciliation
+✔ Kustomization reconciliation completed
+✔ reconciled revision main/7dcf50222499be8c97e22cd37e26bbcda8f70b95
+$ flux get image policy flux-system
+NAME            READY   MESSAGE                                                                 LATEST IMAGE
+my-app-policy   True    Latest image tag <span class="k">for</span> <span class="s1">&#39;ghcr.io/stefanprodan/podinfo&#39;</span> resolved to: <span class="m">5</span>.1.4  ghcr.io/stefanprodan/podinfo:5.1.4
+</code></pre></div>
+<h3 id="how-to-mark-up-files-for-update">How to mark up files for update<a class="headerlink" href="#how-to-mark-up-files-for-update" title="Permanent link">&para;</a></h3>
+<p>The last thing to do in each manifest is to mark the fields that you want to be updated.</p>
+<p>In Flux v1, the annotations in a manifest determines the fields to be updated. In the example, the
+annotations target the image used by the container <code>app</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+  <span class="nt">annotations</span><span class="p">:</span>
+    <span class="nt">fluxcd.io/automated</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
+    <span class="nt">fluxcd.io/tag.app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semver:^5.0</span> <span class="c1"># &lt;-- `.app` here</span>
+  <span class="nt">selector</span><span class="p">:</span>
+    <span class="nt">matchLabels</span><span class="p">:</span>
+      <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">template</span><span class="p">:</span>
+    <span class="nt">metadata</span><span class="p">:</span>
+      <span class="nt">labels</span><span class="p">:</span>
+        <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">spec</span><span class="p">:</span>
+      <span class="nt">containers</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app</span>                  <span class="c1"># &lt;-- targets `app` here</span>
+        <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ghcr.io/stefanprodan/podinfo:5.0.0</span>
+</code></pre></div>
+<p>This works straight-forwardly for Deployment manifests, but when it comes to <code>HelmRelease</code>
+manifests, it <a href="https://docs.fluxcd.io/en/1.21.1/references/helm-operator-integration/#automated-image-detection">gets complicated</a>, and it doesn't work at all for many kinds of resources.</p>
+<p>For Flux v2, you mark the field you want to be updated directly, with the namespaced name of the
+image policy to apply. This is the example Deployment, marked up for Flux v2:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">namespace</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">my-app</span>
+  <span class="nt">selector</span><span class="p">:</span>
+    <span class="nt">matchLabels</span><span class="p">:</span>
+      <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">template</span><span class="p">:</span>
+    <span class="nt">metadata</span><span class="p">:</span>
+      <span class="nt">labels</span><span class="p">:</span>
+        <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">podinfo</span>
+    <span class="nt">spec</span><span class="p">:</span>
+      <span class="nt">containers</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app</span>
+        <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ghcr.io/stefanprodan/podinfo:5.0.0</span> <span class="c1"># {&quot;$imagepolicy&quot;: &quot;flux-system:my-app-policy&quot;}</span>
+</code></pre></div>
+<p>The value <code>flux-system:my-app-policy</code> names the policy that selects the desired image.</p>
+<p>This works in the same way for <code>DaemonSet</code> and <code>CronJob</code> manifests. For <code>HelmRelease</code> manifests, put
+the marker alongside the part of the <code>values</code> that has the image tag. If the image tag is a separate
+field, you can put <code>:tag</code> on the end of the name, to replace the value with just the selected
+image's tag. The <a href="https://toolkit.fluxcd.io/guides/image-update/#configure-image-update-for-custom-resources">image automation guide</a> has examples for <code>HelmRelease</code>
+and other custom resources.</p>
+<h3 id="committing-the-marker-change-and-checking-that-automation-works">Committing the marker change and checking that automation works<a class="headerlink" href="#committing-the-marker-change-and-checking-that-automation-works" title="Permanent link">&para;</a></h3>
+<p>Referring to the image policy created earlier, you can see the example Deployment does not use the
+most recent image. When you commit the manifest file with the update marker added, you would expect
+automation to update the file.</p>
+<p>Commit the change that adds an update marker:</p>
+<div class="highlight"><pre><span></span><code>$ git add app/my-app.yaml <span class="c1"># the filename of the example</span>
+$ git commit -s -m <span class="s2">&quot;Add update marker to my-app manifest&quot;</span>
+$ git push
+<span class="c1"># ...</span>
+</code></pre></div>
+<p>Now to check that the automation makes a change:</p>
+<div class="highlight"><pre><span></span><code>$ flux reconcile image update my-app-auto
+► annotating ImageUpdateAutomation my-app-auto <span class="k">in</span> flux-system namespace
+✔ ImageUpdateAutomation annotated
+◎ waiting <span class="k">for</span> ImageUpdateAutomation reconciliation
+✔ ImageUpdateAutomation reconciliation completed
+✔ committed and pushed a92a4b654f520c00cb6c46b2d5e4fb4861aa58fc
+</code></pre></div>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<p>If a change was not pushed by the image automation, there's several things you can check:</p>
+<ul>
+<li>it's possible it made a change that is not reported in the latest status -- pull from the origin
+   and check the commit log</li>
+<li>check that the name used in the marker corresponds to the namespace and name of an <code>ImagePolicy</code></li>
+<li>check that the <code>ImageUpdateAutomation</code> is in the same namespace as the <code>ImagePolicy</code> objects
+   named in markers</li>
+<li>check that the image policy and the image repository are both reported as <code>Ready</code></li>
+<li>check that the credentials referenced by the <code>GitRepository</code> object have write permission, and
+   create new credentials if necessary.</li>
+</ul>
+<p>As a fallback, you can scan the logs of the automation controller to see if it logged errors:</p>
+<div class="highlight"><pre><span></span><code>$ kubectl logs -n flux-system deploy/image-automation-controller
+</code></pre></div>
+<p>Once you are satisfied that it is working, you can migrate the rest of the manifests using the steps
+from <a href="#migrating-each-manifest-to-flux-v2">"Migrating each manifest to Flux v2"</a> above.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../flux-v1-migration/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Migrate from Flux v1
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../helm-operator-migration/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Migrate from the Helm Operator
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.18f0862e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.994580cf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.9c0e82ba.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

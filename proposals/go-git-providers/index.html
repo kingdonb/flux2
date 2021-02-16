@@ -1,0 +1,2960 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Open and extensible continuous delivery solution for Kubernetes">
+      
+      
+      
+        <meta name="author" content="The Flux project">
+      
+      
+        <link rel="canonical" href="https://toolkit.fluxcd.io/proposals/go-git-providers/">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.8">
+    
+    
+      
+        <title>go-git-providers - Flux | GitOps Toolkit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cb6bc1d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#2094f3">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../_static/custom.css">
+    
+    
+      
+    
+    
+
+<meta property="og:url" content="https://toolkit.fluxcd.io/proposals/go-git-providers/">
+
+<meta property="og:title" content="go-git-providers - Flux | GitOps Toolkit">
+
+<meta property="og:description" content="Open and extensible continuous delivery solution for Kubernetes">
+<meta property="og:image" content="https://toolkit.fluxcd.io/_files/toolkit-icon.png">
+<meta property="og:image:alt" content="GitOps Toolkit">
+<meta property="og:image:type" content="image/png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@stefanprodan">
+<meta name="twitter:creator" content="@stefanprodan">
+
+<meta property="twitter:title" content="go-git-providers - Flux | GitOps Toolkit">
+
+<meta name="twitter:description" content="Open and extensible continuous delivery solution for Kubernetes">
+<meta name="twitter:image" content="https://toolkit.fluxcd.io/_files/toolkit-icon.png">
+<meta name="twitter:image:alt" content="GitOps Toolkit">
+
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue" data-md-color-accent="indigo">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#go-git-providers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://toolkit.fluxcd.io" title="Flux | GitOps Toolkit" class="md-header-nav__button md-logo" aria-label="Flux | GitOps Toolkit">
+      
+  <img src="../../_files/flux-icon@2x.png" alt="logo">
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            Flux | GitOps Toolkit
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              go-git-providers
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/fluxcd/flux2" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fluxcd/flux2
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://toolkit.fluxcd.io" title="Flux | GitOps Toolkit" class="md-nav__button md-logo" aria-label="Flux | GitOps Toolkit">
+      
+  <img src="../../_files/flux-icon@2x.png" alt="logo">
+
+    </a>
+    Flux | GitOps Toolkit
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/fluxcd/flux2" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fluxcd/flux2
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core-concepts/" class="md-nav__link">
+        Core Concepts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/" class="md-nav__link">
+        Get Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
+      
+      <label class="md-nav__link" for="nav-4">
+        Migration
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Migration" data-md-level="1">
+        <label class="md-nav__title" for="nav-4">
+          <span class="md-nav__icon md-icon"></span>
+          Migration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/flux-v1-migration/" class="md-nav__link">
+        Migrate from Flux v1
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/flux-v1-automation-migration/" class="md-nav__link">
+        Migrate from Flux v1 image update automation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/helm-operator-migration/" class="md-nav__link">
+        Migrate from the Helm Operator
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+      
+      <label class="md-nav__link" for="nav-5">
+        Guides
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="nav-5">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/helmreleases/" class="md-nav__link">
+        Manage Helm Releases
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/notifications/" class="md-nav__link">
+        Setup Notifications
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/webhook-receivers/" class="md-nav__link">
+        Setup Webhook Receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/monitoring/" class="md-nav__link">
+        Monitoring with Prometheus
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/sealed-secrets/" class="md-nav__link">
+        Sealed Secrets
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/mozilla-sops/" class="md-nav__link">
+        Mozilla SOPS
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/image-update/" class="md-nav__link">
+        Automate image updates to Git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/sortable-image-tags/" class="md-nav__link">
+        Sortable image tags to use with automation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6" >
+      
+      <label class="md-nav__link" for="nav-6">
+        Toolkit Components
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Toolkit Components" data-md-level="1">
+        <label class="md-nav__title" for="nav-6">
+          <span class="md-nav__icon md-icon"></span>
+          Toolkit Components
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-2" type="checkbox" id="nav-6-2" >
+      
+      <label class="md-nav__link" for="nav-6-2">
+        Source Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Source Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-2">
+          <span class="md-nav__icon md-icon"></span>
+          Source Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/gitrepositories/" class="md-nav__link">
+        GitRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/helmrepositories/" class="md-nav__link">
+        HelmRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/helmcharts/" class="md-nav__link">
+        HelmChart CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/buckets/" class="md-nav__link">
+        Bucket CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/source/api/" class="md-nav__link">
+        Source API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-3" type="checkbox" id="nav-6-3" >
+      
+      <label class="md-nav__link" for="nav-6-3">
+        Kustomize Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Kustomize Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-3">
+          <span class="md-nav__icon md-icon"></span>
+          Kustomize Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/kustomize/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/kustomize/kustomization/" class="md-nav__link">
+        Kustomization CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/kustomize/api/" class="md-nav__link">
+        Kustomize API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-4" type="checkbox" id="nav-6-4" >
+      
+      <label class="md-nav__link" for="nav-6-4">
+        Helm Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Helm Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-4">
+          <span class="md-nav__icon md-icon"></span>
+          Helm Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/helm/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/helm/helmreleases/" class="md-nav__link">
+        HelmRelease CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/helm/api/" class="md-nav__link">
+        Helm API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-5" type="checkbox" id="nav-6-5" >
+      
+      <label class="md-nav__link" for="nav-6-5">
+        Notification Controller
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Notification Controller" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-5">
+          <span class="md-nav__icon md-icon"></span>
+          Notification Controller
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/event/" class="md-nav__link">
+        Event
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/provider/" class="md-nav__link">
+        Provider CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/alert/" class="md-nav__link">
+        Alert CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/receiver/" class="md-nav__link">
+        Receiver CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/notification/api/" class="md-nav__link">
+        Notification API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6-6" type="checkbox" id="nav-6-6" >
+      
+      <label class="md-nav__link" for="nav-6-6">
+        Image Automation Controllers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Image Automation Controllers" data-md-level="2">
+        <label class="md-nav__title" for="nav-6-6">
+          <span class="md-nav__icon md-icon"></span>
+          Image Automation Controllers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/controller/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/imagerepositories/" class="md-nav__link">
+        ImageRepository CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/imagepolicies/" class="md-nav__link">
+        ImagePolicy CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/imageupdateautomations/" class="md-nav__link">
+        ImageUpdateAutomation CRD
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../components/image/automation-api/" class="md-nav__link">
+        Automation API Reference
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" >
+      
+      <label class="md-nav__link" for="nav-7">
+        Flux CLI
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Flux CLI" data-md-level="1">
+        <label class="md-nav__title" for="nav-7">
+          <span class="md-nav__icon md-icon"></span>
+          Flux CLI
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_bootstrap/" class="md-nav__link">
+        Bootstrap
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_bootstrap_github/" class="md-nav__link">
+        Bootstrap github
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_bootstrap_gitlab/" class="md-nav__link">
+        Bootstrap gitlab
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_check/" class="md-nav__link">
+        Check
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create/" class="md-nav__link">
+        Create
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_kustomization/" class="md-nav__link">
+        Create kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_helmrelease/" class="md-nav__link">
+        Create helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_source/" class="md-nav__link">
+        Create source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_source_git/" class="md-nav__link">
+        Create source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_source_helm/" class="md-nav__link">
+        Create source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_source_bucket/" class="md-nav__link">
+        Create source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_alert-provider/" class="md-nav__link">
+        Create alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_alert/" class="md-nav__link">
+        Create alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_receiver/" class="md-nav__link">
+        Create receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_image/" class="md-nav__link">
+        Create image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_image_policy/" class="md-nav__link">
+        Create image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_image_repository/" class="md-nav__link">
+        Create image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_image_update/" class="md-nav__link">
+        Create image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_tenant/" class="md-nav__link">
+        Create tenant
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_secret/" class="md-nav__link">
+        Create secret
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_secret_git/" class="md-nav__link">
+        Create secret git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_secret_helm/" class="md-nav__link">
+        Create secret helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_create_secret_tls/" class="md-nav__link">
+        Create secret tls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete/" class="md-nav__link">
+        Delete
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_kustomization/" class="md-nav__link">
+        Delete kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_helmrelease/" class="md-nav__link">
+        Delete helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_source/" class="md-nav__link">
+        Delete source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_source_git/" class="md-nav__link">
+        Delete source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_source_helm/" class="md-nav__link">
+        Delete source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_source_bucket/" class="md-nav__link">
+        Delete source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_image/" class="md-nav__link">
+        Delete image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_image_policy/" class="md-nav__link">
+        Delete image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_image_repository/" class="md-nav__link">
+        Delete image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_delete_image_update/" class="md-nav__link">
+        Delete image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export/" class="md-nav__link">
+        Export
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_kustomization/" class="md-nav__link">
+        Export kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_helmrelease/" class="md-nav__link">
+        Export helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_source/" class="md-nav__link">
+        Export source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_source_git/" class="md-nav__link">
+        Export source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_source_helm/" class="md-nav__link">
+        Export source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_source_bucket/" class="md-nav__link">
+        Export source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_alert-provider/" class="md-nav__link">
+        Export alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_alert/" class="md-nav__link">
+        Export alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_receiver/" class="md-nav__link">
+        Export receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_image/" class="md-nav__link">
+        Export image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_image_policy/" class="md-nav__link">
+        Export image policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_image_repository/" class="md-nav__link">
+        Export image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_export_image_update/" class="md-nav__link">
+        Export image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get/" class="md-nav__link">
+        Get
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_kustomizations/" class="md-nav__link">
+        Get kustomizations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_helmreleases/" class="md-nav__link">
+        Get helmreleases
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources/" class="md-nav__link">
+        Get sources
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources_git/" class="md-nav__link">
+        Get sources git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources_helm/" class="md-nav__link">
+        Get sources helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources_chart/" class="md-nav__link">
+        Get sources chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_sources_bucket/" class="md-nav__link">
+        Get sources bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_alert-provider.md" class="md-nav__link">
+        Get alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_alerts/" class="md-nav__link">
+        Get alerts
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_alert-providers/" class="md-nav__link">
+        Get alert providers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_receivers/" class="md-nav__link">
+        Get receivers
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_images/" class="md-nav__link">
+        Get images
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_images_policy/" class="md-nav__link">
+        Get images policy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_images_repository/" class="md-nav__link">
+        Get images repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_get_images_update/" class="md-nav__link">
+        Get images update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_install/" class="md-nav__link">
+        Install
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume/" class="md-nav__link">
+        Resume
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_kustomization/" class="md-nav__link">
+        Resume kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_helmrelease/" class="md-nav__link">
+        Resume helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source/" class="md-nav__link">
+        Resume source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source_git/" class="md-nav__link">
+        Resume source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source_helm/" class="md-nav__link">
+        Resume source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source_chart/" class="md-nav__link">
+        Resume source chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_source_bucket/" class="md-nav__link">
+        Resume source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_alert-provider.md" class="md-nav__link">
+        Resume alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_alert/" class="md-nav__link">
+        Resume alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_receiver/" class="md-nav__link">
+        Resume receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_image/" class="md-nav__link">
+        Resume image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_image_repository/" class="md-nav__link">
+        Resume image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_resume_image_update/" class="md-nav__link">
+        Resume image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend/" class="md-nav__link">
+        Suspend
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_kustomization/" class="md-nav__link">
+        Suspend kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_helmrelease/" class="md-nav__link">
+        Suspend helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source/" class="md-nav__link">
+        Suspend source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source_git/" class="md-nav__link">
+        Suspend source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source_helm/" class="md-nav__link">
+        Suspend source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source_chart/" class="md-nav__link">
+        Suspend source chart
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_source_bucket/" class="md-nav__link">
+        Suspend source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_alert-provider.md" class="md-nav__link">
+        Suspend alert provider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_alert/" class="md-nav__link">
+        Suspend alert
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_receiver/" class="md-nav__link">
+        Suspend receiver
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_image/" class="md-nav__link">
+        Suspend image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_image_repository/" class="md-nav__link">
+        Suspend image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_suspend_image_update/" class="md-nav__link">
+        Suspend image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile/" class="md-nav__link">
+        Reconcile
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_kustomization/" class="md-nav__link">
+        Reconcile kustomization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_helmrelease/" class="md-nav__link">
+        Reconcile helmrelease
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_source/" class="md-nav__link">
+        Reconcile source
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_source_git/" class="md-nav__link">
+        Reconcile source git
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_source_helm/" class="md-nav__link">
+        Reconcile source helm
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_source_bucket/" class="md-nav__link">
+        Reconcile source bucket
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_image/" class="md-nav__link">
+        Reconcile image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_image_repository/" class="md-nav__link">
+        Reconcile image repository
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_reconcile_image_update/" class="md-nav__link">
+        Reconcile image update
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cmd/flux_uninstall/" class="md-nav__link">
+        Uninstall
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" >
+      
+      <label class="md-nav__link" for="nav-8">
+        Dev Guides
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Dev Guides" data-md-level="1">
+        <label class="md-nav__title" for="nav-8">
+          <span class="md-nav__icon md-icon"></span>
+          Dev Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev-guides/source-watcher/" class="md-nav__link">
+        Watching for source changes
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev-guides/debugging/" class="md-nav__link">
+        Advanced debugging
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        Roadmap
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#abstract" class="md-nav__link">
+    Abstract
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#goals" class="md-nav__link">
+    Goals
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals" class="md-nav__link">
+    Non-goals
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    Design decisions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    Implementation
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provider-package" class="md-nav__link">
+    Provider package
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client" class="md-nav__link">
+    Client
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiclient" class="md-nav__link">
+    MultiClient
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organizationsclient" class="md-nav__link">
+    OrganizationsClient
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organizationclient" class="md-nav__link">
+    OrganizationClient
+  </a>
+  
+    <nav class="md-nav" aria-label="OrganizationClient">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#organization-teams" class="md-nav__link">
+    Organization Teams
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositoriesclient" class="md-nav__link">
+    RepositoriesClient
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositoryclient" class="md-nav__link">
+    RepositoryClient
+  </a>
+  
+    <nav class="md-nav" aria-label="RepositoryClient">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repository-teams" class="md-nav__link">
+    Repository Teams
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-credentials" class="md-nav__link">
+    Repository Credentials
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="go-git-providers">go-git-providers<a class="headerlink" href="#go-git-providers" title="Permanent link">&para;</a></h1>
+<h2 id="abstract">Abstract<a class="headerlink" href="#abstract" title="Permanent link">&para;</a></h2>
+<p>This proposal aims to create a library with the import path <code>github.com/fluxcd/go-git-providers</code>'
+(import name: <code>gitprovider</code>), which provides an abstraction layer for talking to Git providers
+like GitHub, GitLab and Bitbucket.</p>
+<p>This would become a new repository, specifically targeted at being a general-purpose Git provider
+client for multiple providers and domains.</p>
+<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Support multiple Git provider backends (e.g. GitHub, GitLab, Bitbucket, etc.) using the same interface</li>
+<li>Support talking to multiple domains at once, including custom domains (e.g. talking to "gitlab.com" and "version.aalto.fi" from the same client)</li>
+<li>Support both no authentication (for public repos), basic auth, and OAuth2 for authentication</li>
+<li>Manipulating the following resources:</li>
+<li><strong>Organizations</strong>: <code>GET</code>, <code>LIST</code> (both all accessible top-level orgs and sub-orgs)</li>
+<li>For a given <strong>Organization</strong>:<ul>
+<li><strong>Teams</strong>: <code>GET</code> and <code>LIST</code></li>
+</ul>
+</li>
+<li><strong>Repositories</strong>: <code>GET</code>, <code>LIST</code> and <code>POST</code><ul>
+<li><strong>Team Access</strong>: <code>LIST</code>, <code>POST</code> and <code>DELETE</code></li>
+<li><strong>Credentials</strong>: <code>LIST</code>, <code>POST</code> and <code>DELETE</code></li>
+</ul>
+</li>
+<li>Support sub-organizations (or "sub-groups" in GitLab) if possible</li>
+<li>Support reconciling an object for idempotent operations</li>
+<li>Pagination is automatically handled for <code>LIST</code> requests</li>
+<li>Transparently can manage teams (collections of users, sub-groups in Gitlab) with varying access to repos</li>
+<li>Follow library best practices in order to be easy to vendor (e.g. use major <code>vX</code> versioning &amp; go.mod)</li>
+</ul>
+<h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Support for features not mentioned above</li>
+</ul>
+<h2 id="design-decisions">Design decisions<a class="headerlink" href="#design-decisions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A <code>context.Context</code> should be passed to every request as the first argument</li>
+<li>There should be two interfaces per resource, if applicable:</li>
+<li>one collection-specific interface, with a plural name (e.g. <code>OrganizationsClient</code>), that has methods like <code>Get()</code> and <code>List()</code></li>
+<li>one instance-specific interface, with a singular name (e.g. <code>OrganizationClient</code>), that operates on that instance, e.g. allowing access to child resources, e.g. <code>Teams()</code></li>
+<li>Every <code>Create()</code> signature shall have a <code>{Resource}CreateOptions</code> struct as the last argument.</li>
+<li><code>Delete()</code> and similar methods may use the same pattern if needed</li>
+<li>All <code>*Options</code> structs shall be passed by value (i.e. non-nillable) and contain only nillable, optional fields</li>
+<li>All optional fields in the type structs shall be nillable</li>
+<li>It should be possible to create a fake API client for testing, implementing the same interfaces</li>
+<li>All type structs shall have a <code>Validate()</code> method, and optionally a <code>Default()</code> one</li>
+<li>All type structs shall expose their internal representation (from the underlying library) through the <code>InternalGetter</code> interface with a method <code>GetInternal() interface{}</code></li>
+<li>Typed errors shall be returned, wrapped using Go 1.14's new features</li>
+<li>Go-style enums are used when there are only a few supported values for a field</li>
+<li>Every field is documented using Godoc comment, including <code>+required</code> or <code>+optional</code> to clearly signify its importance</li>
+<li>Support serializing the types to JSON (if needed for e.g. debugging) by adding tags</li>
+</ul>
+<h2 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h2>
+<h3 id="provider-package">Provider package<a class="headerlink" href="#provider-package" title="Permanent link">&para;</a></h3>
+<p>The provider package, e.g. at <code>github.com/fluxcd/go-git-providers/github</code>, will have constructor methods so a client can be created, e.g. as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Create a client for github.com without any authentication</span>
+<span class="nx">c</span> <span class="o">:=</span> <span class="nx">github</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">()</span>
+
+<span class="c1">// Create a client for an enterprise GitHub account, without any authentication</span>
+<span class="nx">c</span> <span class="p">=</span> <span class="nx">github</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="nx">github</span><span class="p">.</span><span class="nx">WithBaseURL</span><span class="p">(</span><span class="s">&quot;enterprise.github.com&quot;</span><span class="p">))</span>
+
+<span class="c1">// Create a client for github.com using a personal oauth2 token</span>
+<span class="nx">c</span> <span class="p">=</span> <span class="nx">github</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="nx">github</span><span class="p">.</span><span class="nx">WithOAuth2</span><span class="p">(</span><span class="s">&quot;&lt;token-here&gt;&quot;</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="client">Client<a class="headerlink" href="#client" title="Permanent link">&para;</a></h3>
+<p>The definition of a <code>Client</code> is as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Client is an interface that allows talking to a Git provider</span>
+<span class="kd">type</span> <span class="nx">Client</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// The Client allows accessing all known resources</span>
+    <span class="nx">ResourceClient</span>
+
+    <span class="c1">// SupportedDomain returns the supported domain</span>
+    <span class="c1">// This field is set at client creation time, and can&#39;t be changed</span>
+    <span class="nx">SupportedDomain</span><span class="p">()</span> <span class="kt">string</span>
+
+    <span class="c1">// ProviderID returns the provider ID (e.g. &quot;github&quot;, &quot;gitlab&quot;) for this client</span>
+    <span class="c1">// This field is set at client creation time, and can&#39;t be changed</span>
+    <span class="nx">ProviderID</span><span class="p">()</span> <span class="nx">ProviderID</span>
+
+    <span class="c1">// Raw returns the Go client used under the hood for accessing the Git provider</span>
+    <span class="nx">Raw</span><span class="p">()</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>As one can see, the <code>Client</code> is scoped for a single backing domain. <code>ProviderID</code> is a typed string, and every
+implementation package defines their own constant, e.g. <code>const ProviderName = gitprovider.ProviderID("github")</code>.</p>
+<p>The <code>ResourceClient</code> actually allows talking to resources of the API, both for single objects, and collections:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// ResourceClient allows access to resource-specific clients</span>
+<span class="kd">type</span> <span class="nx">ResourceClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// Organization gets the OrganizationClient for the specific top-level organization</span>
+    <span class="c1">// ErrNotTopLevelOrganization will be returned if the organization is not top-level when using</span>
+    <span class="nx">Organization</span><span class="p">(</span><span class="nx">o</span> <span class="nx">OrganizationRef</span><span class="p">)</span> <span class="nx">OrganizationClient</span>
+
+    <span class="c1">// Organizations returns the OrganizationsClient handling sets of organizations</span>
+    <span class="nx">Organizations</span><span class="p">()</span> <span class="nx">OrganizationsClient</span>
+
+    <span class="c1">// Repository gets the RepositoryClient for the specified RepositoryRef</span>
+    <span class="nx">Repository</span><span class="p">(</span><span class="nx">r</span> <span class="nx">RepositoryRef</span><span class="p">)</span> <span class="nx">RepositoryClient</span>
+
+    <span class="c1">// Repositories returns the RepositoriesClient handling sets of organizations</span>
+    <span class="nx">Repositories</span><span class="p">()</span> <span class="nx">RepositoriesClient</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>In order to reference organizations and repositories, there are the <code>OrganizationRef</code> and <code>RepositoryRef</code>
+interfaces:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// OrganizationRef references an organization in a Git provider</span>
+<span class="kd">type</span> <span class="nx">OrganizationRef</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// String returns the HTTPS URL</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Stringer</span>
+
+    <span class="c1">// GetDomain returns the URL-domain for the Git provider backend, e.g. gitlab.com or version.aalto.fi</span>
+    <span class="nx">GetDomain</span><span class="p">()</span> <span class="kt">string</span>
+    <span class="c1">// GetOrganization returns the top-level organization, i.e. &quot;weaveworks&quot; or &quot;kubernetes-sigs&quot;</span>
+    <span class="nx">GetOrganization</span><span class="p">()</span> <span class="kt">string</span>
+    <span class="c1">// GetSubOrganizations returns the names of sub-organizations (or sub-groups),</span>
+    <span class="c1">// e.g. [&quot;engineering&quot;, &quot;frontend&quot;] would be returned for gitlab.com/weaveworks/engineering/frontend</span>
+    <span class="nx">GetSubOrganizations</span><span class="p">()</span> <span class="p">[]</span><span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">// RepositoryRef references a repository hosted by a Git provider</span>
+<span class="kd">type</span> <span class="nx">RepositoryRef</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// RepositoryRef requires an OrganizationRef to fully-qualify a repo reference</span>
+    <span class="nx">OrganizationRef</span>
+
+    <span class="c1">// GetRepository returns the name of the repository</span>
+    <span class="nx">GetRepository</span><span class="p">()</span> <span class="kt">string</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Along with these, there is <code>OrganizationInfo</code> and <code>RepositoryInfo</code> which implement the above mentioned interfaces in a straightforward way.</p>
+<p>If you want to create an <code>OrganizationRef</code> or <code>RepositoryRef</code>, you can either use <code>NewOrganizationInfo()</code> or <code>NewRepositoryInfo()</code>, filling in all parts of the reference, or use the <code>ParseRepositoryURL(r string) (RepositoryRef, error)</code> or <code>ParseOrganizationURL(o string) (OrganizationRef, error)</code> methods.</p>
+<p>As mentioned above, only one target domain is supported by the <code>Client</code>. This means e.g. that if the <code>Client</code> is configured for GitHub, and you feed it a GitLab URL to parse, <code>ErrDomainUnsupported</code> will be returned.</p>
+<p>This brings us to a higher-level client abstraction, <code>MultiClient</code>.</p>
+<h3 id="multiclient">MultiClient<a class="headerlink" href="#multiclient" title="Permanent link">&para;</a></h3>
+<p>In order to automatically support multiple domains and providers using the same interface, <code>MultiClient</code> is introduced.</p>
+<p>The user would use the <code>MultiClient</code> as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Create a client to github.com without authentication</span>
+<span class="nx">gh</span> <span class="o">:=</span> <span class="nx">github</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">()</span>
+
+<span class="c1">// Create a client to gitlab.com, authenticating with basic auth</span>
+<span class="nx">gl</span> <span class="o">:=</span> <span class="nx">gitlab</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="nx">gitlab</span><span class="p">.</span><span class="nx">WithBasicAuth</span><span class="p">(</span><span class="s">&quot;&lt;username&gt;&quot;</span><span class="p">,</span> <span class="s">&quot;&lt;password&quot;</span><span class="p">))</span>
+
+<span class="c1">// Create a client to the GitLab instance at version.aalto.fi, with a given OAuth2 token</span>
+<span class="nx">aalto</span> <span class="o">:=</span> <span class="nx">gitlab</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="nx">gitlab</span><span class="p">.</span><span class="nx">WithBaseURL</span><span class="p">(</span><span class="s">&quot;version.aalto.fi&quot;</span><span class="p">),</span> <span class="nx">gitlab</span><span class="p">.</span><span class="nx">WithOAuth2Token</span><span class="p">(</span><span class="s">&quot;&lt;your-token&gt;&quot;</span><span class="p">))</span>
+
+<span class="c1">// Create a MultiClient which supports talking to any of these backends</span>
+<span class="nx">client</span> <span class="o">:=</span> <span class="nx">gitprovider</span><span class="p">.</span><span class="nx">NewMultiClient</span><span class="p">(</span><span class="nx">gh</span><span class="p">,</span> <span class="nx">gl</span><span class="p">,</span> <span class="nx">aalto</span><span class="p">)</span>
+</code></pre></div>
+<p>The interface definition of <code>MultiClient</code> is similar to that one of <code>Client</code>, both embedding <code>ResourceClient</code>, but it also allows access to domain-specific underlying <code>Client</code>'s:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// MultiClient allows talking to multiple Git providers at once</span>
+<span class="kd">type</span> <span class="nx">MultiClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// The MultiClient allows accessing all known resources, automatically choosing the right underlying</span>
+    <span class="c1">// Client based on the resource&#39;s domain</span>
+    <span class="nx">ResourceClient</span>
+
+    <span class="c1">// SupportedDomains returns a list of known domains</span>
+    <span class="nx">SupportedDomains</span><span class="p">()</span> <span class="p">[]</span><span class="kt">string</span>
+
+    <span class="c1">// ClientForDomain returns the Client used for a specific domain</span>
+    <span class="nx">ClientForDomain</span><span class="p">(</span><span class="nx">domain</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">Client</span><span class="p">,</span> <span class="kt">bool</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="organizationsclient">OrganizationsClient<a class="headerlink" href="#organizationsclient" title="Permanent link">&para;</a></h3>
+<p>The <code>OrganizationsClient</code> provides access to a set of organizations, as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// OrganizationsClient operates on organizations the user has access to</span>
+<span class="kd">type</span> <span class="nx">OrganizationsClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// Get a specific organization the user has access to</span>
+    <span class="c1">// This might also refer to a sub-organization</span>
+    <span class="c1">// ErrNotFound is returned if the resource does not exist</span>
+    <span class="nx">Get</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">o</span> <span class="nx">OrganizationRef</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Organization</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// List all top-level organizations the specific user has access to</span>
+    <span class="c1">// List should return all available organizations, using multiple paginated requests if needed</span>
+    <span class="nx">List</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">([]</span><span class="nx">Organization</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// Children returns the immediate child-organizations for the specific OrganizationRef o.</span>
+    <span class="c1">// The OrganizationRef may point to any sub-organization that exists</span>
+    <span class="c1">// This is not supported in GitHub</span>
+    <span class="c1">// Children should return all available organizations, using multiple paginated requests if needed</span>
+    <span class="nx">Children</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">o</span> <span class="nx">OrganizationRef</span><span class="p">)</span> <span class="p">([]</span><span class="nx">Organization</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// Possibly add Create/Update/Delete methods later</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>Organization</code> struct is fairly straightforward for now:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Organization represents an (top-level- or sub-) organization</span>
+<span class="kd">type</span> <span class="nx">Organization</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// OrganizationInfo provides the required fields</span>
+    <span class="c1">// (Domain, Organization and SubOrganizations) required for being an OrganizationRef</span>
+    <span class="nx">OrganizationInfo</span> <span class="s">`json:&quot;,inline&quot;`</span>
+    <span class="c1">// InternalHolder implements the InternalGetter interface</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">InternalHolder</span> <span class="s">`json:&quot;,inline&quot;`</span>
+
+    <span class="c1">// Name is the human-friendly name of this organization, e.g. &quot;Weaveworks&quot; or &quot;Kubernetes SIGs&quot;</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&quot;name&quot;`</span>
+
+    <span class="c1">// Description returns a description for the organization</span>
+    <span class="c1">// No default value at POST-time</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Description</span> <span class="o">*</span><span class="kt">string</span> <span class="s">`json:&quot;description&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>OrganizationInfo</code> struct is a straightforward struct just implementing the <code>OrganizationRef</code> interface
+with basic fields &amp; getters. <code>InternalHolder</code> is implementing the <code>InternalGetter</code> interface as follows, and is
+embedded into all main structs:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// InternalGetter allows access to the underlying object</span>
+<span class="kd">type</span> <span class="nx">InternalGetter</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// GetInternal returns the underlying struct that&#39;s used</span>
+    <span class="nx">GetInternal</span><span class="p">()</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="c1">// InternalHolder can be embedded into other structs to implement the InternalGetter interface</span>
+<span class="kd">type</span> <span class="nx">InternalHolder</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// Internal contains the underlying object.</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Internal</span> <span class="kd">interface</span><span class="p">{}</span> <span class="s">`json:&quot;-&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="organizationclient">OrganizationClient<a class="headerlink" href="#organizationclient" title="Permanent link">&para;</a></h3>
+<p><code>OrganizationClient</code> allows access to a specific organization's underlying resources as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// OrganizationClient operates on a given/specific organization</span>
+<span class="kd">type</span> <span class="nx">OrganizationClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// Teams gives access to the TeamsClient for this specific organization</span>
+    <span class="nx">Teams</span><span class="p">()</span> <span class="nx">OrganizationTeamsClient</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="organization-teams">Organization Teams<a class="headerlink" href="#organization-teams" title="Permanent link">&para;</a></h4>
+<p>Teams belonging to a certain organization can at this moment be fetched on an individual basis, or listed.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// OrganizationTeamsClient handles teams organization-wide</span>
+<span class="kd">type</span> <span class="nx">OrganizationTeamsClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// Get a team within the specific organization</span>
+    <span class="c1">// teamName may include slashes, to point to e.g. &quot;sub-teams&quot; i.e. subgroups in Gitlab</span>
+    <span class="c1">// teamName must not be an empty string</span>
+    <span class="c1">// ErrNotFound is returned if the resource does not exist</span>
+    <span class="nx">Get</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">teamName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Team</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// List all teams (recursively, in terms of subgroups) within the specific organization</span>
+    <span class="c1">// List should return all available organizations, using multiple paginated requests if needed</span>
+    <span class="nx">List</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">([]</span><span class="nx">Team</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// Possibly add Create/Update/Delete methods later</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>Team</code> struct is defined as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Team is a representation for a team of users inside of an organization</span>
+<span class="kd">type</span> <span class="nx">Team</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// Team embeds OrganizationInfo which makes it automatically comply with OrganizationRef</span>
+    <span class="nx">OrganizationInfo</span> <span class="s">`json:&quot;,inline&quot;`</span>
+    <span class="c1">// Team embeds InternalHolder for accessing the underlying object</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">InternalHolder</span> <span class="s">`json:&quot;,inline&quot;`</span>
+
+    <span class="c1">// Name describes the name of the team. The team name may contain slashes</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&quot;name&quot;`</span>
+
+    <span class="c1">// Members points to a set of user names (logins) of the members of this team</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Members</span> <span class="p">[]</span><span class="kt">string</span> <span class="s">`json:&quot;members&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>In GitLab, teams could be modelled as users in a sub-group. Those users can later be added as a single unit
+to access a given repository.</p>
+<h3 id="repositoriesclient">RepositoriesClient<a class="headerlink" href="#repositoriesclient" title="Permanent link">&para;</a></h3>
+<p><code>RepositoriesClient</code> provides access to a set of repositories for the user.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// RepositoriesClient operates on repositories the user has access to</span>
+<span class="kd">type</span> <span class="nx">RepositoriesClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// Get returns the repository at the given path</span>
+    <span class="c1">// ErrNotFound is returned if the resource does not exist</span>
+    <span class="nx">Get</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">r</span> <span class="nx">RepositoryRef</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Repository</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// List all repositories in the given organization</span>
+    <span class="c1">// List should return all available organizations, using multiple paginated requests if needed</span>
+    <span class="nx">List</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">o</span> <span class="nx">OrganizationRef</span><span class="p">)</span> <span class="p">([]</span><span class="nx">Repository</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// Create creates a repository at the given organization path, with the given URL-encoded name and options</span>
+    <span class="c1">// ErrAlreadyExists will be returned if the resource already exists</span>
+    <span class="nx">Create</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">Repository</span><span class="p">,</span> <span class="nx">opts</span> <span class="nx">RepositoryCreateOptions</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Repository</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// Reconcile makes sure r is the actual state in the backing Git provider. If r doesn&#39;t exist</span>
+    <span class="c1">// under the hood, it is created. If r is already the actual state, this is a no-op. If r isn&#39;t</span>
+    <span class="c1">// the actual state, the resource will either be updated or deleted/recreated.</span>
+    <span class="nx">Reconcile</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">Repository</span><span class="p">)</span> <span class="kt">error</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>RepositoryCreateOptions</code> has options like <code>AutoInit *bool</code>, <code>LicenseTemplate *string</code> and so forth to allow an
+one-time initialization step.</p>
+<p>The <code>Repository</code> struct is defined as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Repository represents a Git repository provided by a Git provider</span>
+<span class="kd">type</span> <span class="nx">Repository</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// RepositoryInfo provides the required fields</span>
+    <span class="c1">// (Domain, Organization, SubOrganizations and RepositoryName)</span>
+    <span class="c1">// required for being an RepositoryRef</span>
+    <span class="nx">RepositoryInfo</span> <span class="s">`json:&quot;,inline&quot;`</span>
+    <span class="c1">// InternalHolder implements the InternalGetter interface</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">InternalHolder</span> <span class="s">`json:&quot;,inline&quot;`</span>
+
+    <span class="c1">// Description returns a description for the repository</span>
+    <span class="c1">// No default value at POST-time</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Description</span> <span class="o">*</span><span class="kt">string</span> <span class="s">`json:&quot;description&quot;`</span>
+
+    <span class="c1">// Visibility returns the desired visibility for the repository</span>
+    <span class="c1">// Default value at POST-time: RepoVisibilityPrivate</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Visibility</span> <span class="o">*</span><span class="nx">RepoVisibility</span>
+<span class="p">}</span>
+
+<span class="c1">// GetCloneURL gets the clone URL for the specified transport type</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Repository</span><span class="p">)</span> <span class="nx">GetCloneURL</span><span class="p">(</span><span class="nx">transport</span> <span class="nx">TransportType</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">GetCloneURL</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">transport</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>As can be seen, there is also a <code>GetCloneURL</code> function for the repository which allows
+resolving the URL from which to clone the repo, for a given transport method (<code>ssh</code> and <code>https</code>
+are supported <code>TransportType</code>s)</p>
+<h3 id="repositoryclient">RepositoryClient<a class="headerlink" href="#repositoryclient" title="Permanent link">&para;</a></h3>
+<p><code>RepositoryClient</code> allows access to a given repository's underlying resources, like follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// RepositoryClient operates on a given/specific repository</span>
+<span class="kd">type</span> <span class="nx">RepositoryClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// TeamAccess gives access to what teams have access to this specific repository</span>
+    <span class="nx">TeamAccess</span><span class="p">()</span> <span class="nx">RepositoryTeamAccessClient</span>
+
+    <span class="c1">// Credentials gives access to manipulating credentials for accessing this specific repository</span>
+    <span class="nx">Credentials</span><span class="p">()</span> <span class="nx">RepositoryCredentialsClient</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="repository-teams">Repository Teams<a class="headerlink" href="#repository-teams" title="Permanent link">&para;</a></h4>
+<p><code>RepositoryTeamAccessClient</code> allows adding &amp; removing teams from the list of authorized persons to access a repository.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// RepositoryTeamAccessClient operates on the teams list for a specific repository</span>
+<span class="kd">type</span> <span class="nx">RepositoryTeamAccessClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// Create adds a given team to the repo&#39;s team access control list</span>
+    <span class="c1">// ErrAlreadyExists will be returned if the resource already exists</span>
+    <span class="c1">// The embedded RepositoryInfo of ta does not need to be populated, but if it is,</span>
+    <span class="c1">// it must equal to the RepositoryRef given to the RepositoryClient.</span>
+    <span class="nx">Create</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">ta</span> <span class="o">*</span><span class="nx">TeamAccess</span><span class="p">,</span> <span class="nx">opts</span> <span class="nx">RepositoryAddTeamOptions</span><span class="p">)</span> <span class="kt">error</span>
+
+    <span class="c1">// Lists the team access control list for this repo</span>
+    <span class="nx">List</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">([]</span><span class="nx">TeamAccess</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// Reconcile makes sure ta is the actual state in the backing Git provider. If ta doesn&#39;t exist</span>
+    <span class="c1">// under the hood, it is created. If ta is already the actual state, this is a no-op. If ta isn&#39;t</span>
+    <span class="c1">// the actual state, the resource will either be updated or deleted/recreated.</span>
+    <span class="c1">// The embedded RepositoryInfo of ta does not need to be populated, but if it is,</span>
+    <span class="c1">// it must equal to the RepositoryRef given to the RepositoryClient.</span>
+    <span class="nx">Reconcile</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">ta</span> <span class="o">*</span><span class="nx">TeamAccess</span><span class="p">)</span> <span class="kt">error</span>
+
+    <span class="c1">// Delete removes the given team from the repo&#39;s team access control list</span>
+    <span class="c1">// ErrNotFound is returned if the resource does not exist</span>
+    <span class="nx">Delete</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">teamName</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>TeamAccess</code> struct looks as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// TeamAccess describes a binding between a repository and a team</span>
+<span class="kd">type</span> <span class="nx">TeamAccess</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// TeamAccess embeds RepositoryInfo which makes it automatically comply with RepositoryRef</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">RepositoryInfo</span> <span class="s">`json:&quot;,inline&quot;`</span>
+    <span class="c1">// TeamAccess embeds InternalHolder for accessing the underlying object</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">InternalHolder</span> <span class="s">`json:&quot;,inline&quot;`</span>
+
+    <span class="c1">// Name describes the name of the team. The team name may contain slashes</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&quot;name&quot;`</span>
+
+    <span class="c1">// Permission describes the permission level for which the team is allowed to operate</span>
+    <span class="c1">// Default: read</span>
+    <span class="c1">// Available options: See the TeamRepositoryPermission enum</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">Permission</span> <span class="o">*</span><span class="nx">TeamRepositoryPermission</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="repository-credentials">Repository Credentials<a class="headerlink" href="#repository-credentials" title="Permanent link">&para;</a></h4>
+<p><code>RepositoryCredentialsClient</code> allows adding &amp; removing credentials (e.g. deploy keys) from accessing a specific repository.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// RepositoryCredentialsClient operates on the access credential list for a specific repository</span>
+<span class="kd">type</span> <span class="nx">RepositoryCredentialsClient</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// Create a credential with the given human-readable name, the given bytes and optional options</span>
+    <span class="c1">// ErrAlreadyExists will be returned if the resource already exists</span>
+    <span class="nx">Create</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">c</span> <span class="nx">RepositoryCredential</span><span class="p">,</span> <span class="nx">opts</span> <span class="nx">CredentialCreateOptions</span><span class="p">)</span> <span class="kt">error</span>
+
+    <span class="c1">// Lists all credentials for the given credential type</span>
+    <span class="nx">List</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">t</span> <span class="nx">RepositoryCredentialType</span><span class="p">)</span> <span class="p">([]</span><span class="nx">RepositoryCredential</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">// Reconcile makes sure c is the actual state in the backing Git provider. If c doesn&#39;t exist</span>
+    <span class="c1">// under the hood, it is created. If c is already the actual state, this is a no-op. If c isn&#39;t</span>
+    <span class="c1">// the actual state, the resource will either be updated or deleted/recreated.</span>
+    <span class="nx">Reconcile</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">c</span> <span class="nx">RepositoryCredential</span><span class="p">)</span> <span class="kt">error</span>
+
+    <span class="c1">// Deletes a credential from the repo. name corresponds to GetName() of the credential</span>
+    <span class="c1">// ErrNotFound is returned if the resource does not exist</span>
+    <span class="nx">Delete</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">t</span> <span class="nx">RepositoryCredentialType</span><span class="p">,</span> <span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>In order to support multiple different types of credentials, <code>RepositoryCredential</code> is an interface:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// RepositoryCredential is a credential that allows access (either read-only or read-write) to the repo</span>
+<span class="kd">type</span> <span class="nx">RepositoryCredential</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// GetType returns the type of the credential</span>
+    <span class="nx">GetType</span><span class="p">()</span> <span class="nx">RepositoryCredentialType</span>
+
+    <span class="c1">// GetName returns a name (or title/description) of the credential</span>
+    <span class="nx">GetName</span><span class="p">()</span> <span class="kt">string</span>
+
+    <span class="c1">// GetData returns the key that will be authorized to access the repo, this can e.g. be a SSH public key</span>
+    <span class="nx">GetData</span><span class="p">()</span> <span class="p">[]</span><span class="kt">byte</span>
+
+    <span class="c1">// IsReadOnly returns whether this credential is authorized to write to the repository or not</span>
+    <span class="nx">IsReadOnly</span><span class="p">()</span> <span class="kt">bool</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The default implementation of <code>RepositoryCredential</code> is <code>DeployKey</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// DeployKey represents a short-lived credential (e.g. an SSH public key) used for accessing a repository</span>
+<span class="kd">type</span> <span class="nx">DeployKey</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// DeployKey embeds InternalHolder for accessing the underlying object</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">InternalHolder</span> <span class="s">`json:&quot;,inline&quot;`</span>
+
+    <span class="c1">// Title is the human-friendly interpretation of what the key is for (and does)</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Title</span> <span class="kt">string</span> <span class="s">`json:&quot;title&quot;`</span>
+
+    <span class="c1">// Key specifies the public part of the deploy (e.g. SSH) key</span>
+    <span class="c1">// +required</span>
+    <span class="nx">Key</span> <span class="p">[]</span><span class="kt">byte</span> <span class="s">`json:&quot;key&quot;`</span>
+
+    <span class="c1">// ReadOnly specifies whether this DeployKey can write to the repository or not</span>
+    <span class="c1">// Default value at POST-time: true</span>
+    <span class="c1">// +optional</span>
+    <span class="nx">ReadOnly</span> <span class="o">*</span><span class="kt">bool</span> <span class="s">`json:&quot;readOnly&quot;`</span>
+<span class="p">}</span>
+</code></pre></div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.18f0862e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.994580cf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.9c0e82ba.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
