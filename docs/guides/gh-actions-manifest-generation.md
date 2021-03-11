@@ -2,13 +2,32 @@
 
 This guide shows how to handle a basic use-case of manifest generation with GitHub Actions, using third-party tools in CI to run pre-processing that prepares YAML manifests for deployment, and then commit to a deploy branch in git for kustomize-controller to apply them.
 
-Usage:
+## Primary Uses of Flux
 
-Flux's primary use case is to apply manifests to a cluster, from the latest commit in a branch ref.
+Flux's primary use case is to apply YAML manifests from the latest `Revision` in an `Artifact`. For a `GitRepository` source, this is the latest commit in a branch or tag ref. The use cases in this tutorial for manifest generation assume that the CI is given write access to one or more Git repos. This can be complicated to set up. In GitHub Actions though, for a single repo this is automatic without additional configuration wherever Actions are enabled. In the third example, since there is more than a single repository involved, an additional Personal Access Token is used as well.
 
-There are two basic use cases described below, both of which demonstrate how to add commits and push updates to a branch with some slight differences. One example is doing a simple in-place string substitution using `sed -i` with a variable that is made available by the source host, in CI. The second example is using a third-party tool, `jsonnet`, to do what may be colloquially referred to as "YAML rehydration".
+Flux v2 can not be configured to call out to arbitrary binaries that a user might supply with an `InitContainer`, as it was sometimes done in Flux v1. It is assumed if users want to run anything besides vanilla `Kustomize` and `envsubst` with respect to manifest generation, that it will be done through CI on GitHub, or some similar adaptation of the methods shown below for other CI providers.
 
-### String Substitution with `sed -i`
+### Use Cases of Manifest Generation
+
+There are several use cases presented. We're going to see a few different ways how to add commits and push updates to a branch through GitHub Actions.
+
+One example is doing a simple in-place string substitution using `sed -i` with a variable that is made available by the source host, in CI.
+
+Then, a basic example of Docker Build and Push shows two strategies that can be used for tagging and versioning images.
+
+The next example is using a third-party tool, `jsonnet`, to do what may be colloquially referred to as "YAML rehydration".
+
+Finally we show how a Personal Access Token can enable commits across repositories. This can also be used to replicate the best nearest approximation of Flux's "deploy latest image" feature of yesteryore, without invoking Flux v1's expensive and redundant image pull requirements to get access to build metadata. This is done by leverage of CI to commit and push a subfolder from an application repository into a separate deploy branch of plain YAML manifests for `Kustomization` to apply, that can be pushed to any branch on any separate repository to which CI is granted write access.
+
+* [String Substitution with `sed -i`](#string-substitution-with-sed-i)
+* [Docker Build and Tag with Version](#docker-build-and-tag-with-version)
+* [Jsonnet for YAML Document Rehydration](#jsonnet-for-yaml-document-rehydration)
+* [Commit Across Repositories Workflow](#commit-across-repositories-workflow)
+
+The examples below assume no prior familiarity with GitHub Actions. Everything that is needed for a working functioning deployment of an application with its own routines for manifest generation to be connected with Flux is shown.
+
+#### String Substitution with `sed -i`
 
 The entry point for this example starts at `.github/workflows/` in your source repository. There are two actions used together here. The use case served is, to build a manifest with the commit hash of the latest commit to deploy. Also shown here, is how to build an image and push a tag from the latest commit on the branch. This example targets any commit on any branch.
 
@@ -56,85 +75,13 @@ jobs:
         run: flux -v
 ```
 
-Note that this action can only be used on GitHub **Linux AMD64** runners.
-The latest stable version of the `flux` binary is downloaded from
-GitHub [releases](https://github.com/fluxcd/flux2/releases)
-and placed at `/usr/local/bin/flux`.
 
-You can download a specific version with:
+### Jsonnet for YAML Document Rehydration
 
-```yaml
-    steps:
-      - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@main
-        with:
-          version: 0.8.0
-```
 
-### Automate Flux updates
 
-Example workflow for updating Flux's components generated with `flux bootstrap --path=clusters/production`:
+### Commit Across Repositories Workflow
 
-```yaml
-name: update-flux
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 * * * *"
 
-jobs:
-  components:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-      - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@main
-      - name: Check for updates
-        id: update
-        run: |
-          flux install \
-            --export > ./clusters/production/flux-system/gotk-components.yaml
 
-          VERSION="$(flux -v)"
-          echo "::set-output name=flux_version::$VERSION"
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-            token: ${{ secrets.GITHUB_TOKEN }}
-            branch: update-flux
-            commit-message: Update to ${{ steps.update.outputs.flux_version }}
-            title: Update to ${{ steps.update.outputs.flux_version }}
-            body: |
-              ${{ steps.update.outputs.flux_version }}
-```
-
-### End-to-end testing
-
-Example workflow for running Flux in Kubernetes Kind:
-
-```yaml
-name: e2e
-
-on:
-  push:
-    branches:
-      - '*'
-
-jobs:
-  kubernetes:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@main
-      - name: Setup Kubernetes Kind
-        uses: engineerd/setup-kind@v0.5.0
-      - name: Install Flux in Kubernetes Kind
-        run: flux install
-```
-
-A complete e2e testing workflow is available here
-[flux2-kustomize-helm-example](https://github.com/fluxcd/flux2-kustomize-helm-example/blob/main/.github/workflows/e2e.yaml)
