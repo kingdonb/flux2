@@ -32,11 +32,15 @@ The examples below assume no prior familiarity with GitHub Actions. Everything t
 The entry point for this example starts at `.github/workflows/` in your source repository. There are two actions used together here. The use case served is, to build a manifest with the commit hash of the latest commit to deploy. Also shown here, is how to build an image and push a tag from the latest commit on the branch. This example targets any commit on any branch.
 
 !!! warning "`GitRepository` source only targets one branch"
-    While this example updates any branch with CI, each `Kustomization` only deploys manifests from one branch or tag at a time. These workflows are meant to go into for your application's repository, wherever images are built from. Use this technique to manage preview environments.
+    While this example updates any branch (`branches: ['*']`) from CI, each `Kustomization` in Flux only deploys manifests from **one branch or tag** at a time. This is only the first example.
+
+This workflow example could go into your application's repository, wherever images are built from – then each CI build triggers a commit writing back the `GIT_SHA` to a configmap in the branch, and an example `deployment` YAML manifest that could be deployed with a `Kustomization`, or just as easily using `kubectl apply -f k8s.yml`, since it doesn't take advantage of any other Kustomize features or `envsubst`. We will show each of those ideas in succession below. Take these and adapt them to your use case, it may be possible to get this done with some really basic tools like `sed`.
+
+This example borrows a [Prepare step](https://github.com/fluxcd/kustomize-controller/blob/5da1fc043db4a1dc9fd3cf824adc8841b56c2fcd/.github/workflows/release.yml#L17-L25) from Kustomize Controller's own release workflow, to enable easy migration from or to `GIT_SHA`-based tags and a newer alternative, the `image-automation-controller`'s preferred Timestamp-based formatting for [Sortable image tags](/guides/sortable-image-tags).
 
 ```yaml
-# ./.github/workflows/
-name: Manifest Generation
+# ./.github/workflows/manifest-generate.yaml
+name: Manifest Generate
 on:
   push:
     branches:
@@ -44,7 +48,7 @@ on:
 
 jobs:
   run:
-    name: Push Update
+    name: Push Git Update
     runs-on: ubuntu-latest
     steps:
       - name: Prepare
@@ -56,6 +60,7 @@ jobs:
           fi
           echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           echo ::set-output name=VERSION::${VERSION}
+
       - name: Checkout repo
         uses: actions/checkout@v2
 
@@ -68,12 +73,49 @@ jobs:
           add: '.'
           message: "[ci skip] deploy from ${{ steps.prep.outputs.VERSION }}"
           signoff: true
+
     steps:
       - name: Setup Flux CLI
         uses: fluxcd/flux2/action@main
       - name: Run Flux commands
         run: flux -v
 ```
+
+Skipping over some hard parts, first see this easy shell script that performs an in-place string substitution with `sed`.
+
+```yaml
+# excerpted from above - run a shell script
+- name: Update manifests
+  run: ./update-k8s.sh $GITHUB_SHA
+```
+
+```
+# update-k8s.sh
+#!/bin/bash
+
+set -feuo pipefail
+
+GIT_SHA=${1:0:8}
+sed -i "s|image: kingdonb/any-old-app:.*|image: kingdonb/any-old-app:$GIT_SHA|" k8s.yml
+sed -i "s|GIT_SHA: .*|GIT_SHA: $GIT_SHA|" flux-config/app-version-configmap.yaml
+```
+
+When CI runs the `update-k8s.sh` script, it passes in the full value of `GITHUB_SHA` which is trimmed in the script to only the first 8 characters. Then, the script runs `sed -i` twice, updating `k8s.yml` and `flux-config/app-version-configmap.yaml` which are given as examples here below.
+
+```
+apiVersion: v1
+data:
+  GIT_SHA: 4f314627
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: any-old-app-version
+  namespace: devl
+```
+
+
+### Docker Build and Tag with Version
+
 
 
 ### Jsonnet for YAML Document Rehydration
